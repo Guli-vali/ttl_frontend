@@ -1,103 +1,57 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { PlusCircle } from "lucide-react";
+
+export default function HomePage() {
+  const [cards, setCards] = useState([
+      { id: 1, title: 'Карточка 1', text: 'Содержимое карточки 1' },
+      { id: 2, title: 'Карточка 2', text: 'Содержимое карточки 2' },
+      { id: 3, title: 'Карточка 3', text: 'Содержимое карточки 3' },
+      { id: 4, title: 'Карточка 4', text: 'Содержимое карточки 4' },
+      { id: 5, title: 'Карточка 5', text: 'Содержимое карточки 5' },
+      { id: 6, title: 'Карточка 6', text: 'Содержимое карточки 6' },
+      { id: 7, title: 'Карточка 7', text: 'Содержимое карточки 7' },
+      { id: 8, title: 'Карточка 8', text: 'Содержимое карточки 8' },
+    // Добавьте больше карточек по мере необходимости
+  ]);
+
+    const addCard = () => {
+        const newId = cards.length + 1;
+        const newCard = {
+          id: newId,
+          title: `Карточка ${newId}`,
+          text: `Содержимое карточки ${newId}`
+        };
+        setCards(cards => [...cards, newCard]);
+    };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
+      {/* Хедер */}
+      <header className="p-6 text-black text-left text-3xl font-bold">
+        Activities
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Контент */}
+      <main className="flex-1 overflow-y-auto p-4">
+        <div className="flex flex-col-reverse space-y-reverse space-y-4 pb-16">
+          {cards.map((card) => (
+            <div key={card.id} className="p-4 bg-gray-100 rounded shadow">
+              <h2 className="text-xl font-semibold">{card.title}</h2>
+              <p>{card.text}</p>
+            </div>
+          ))}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* Нижнее таб-меню */}
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
+        <button 
+        onClick={addCard}
+        className="flex flex-col items-center text-gray-700 hover:text-blue-600">
+          <PlusCircle size={42} />
+          <span className="text-xs">Добавить</span>
+        </button>
+      </nav>
     </div>
   );
 }
