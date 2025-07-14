@@ -1,17 +1,18 @@
-# Этап 1 — сборка приложения
+# Этап 1: сборка
 FROM node:18-alpine as build
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 
-# Этап 2 — запуск на nginx
-FROM nginx:stable-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+# Этап 2: продакшн-сервер
+FROM node:18-alpine
+WORKDIR /app
 
-EXPOSE 80
-EXPOSE 443
+COPY --from=build /app ./
+ENV NODE_ENV=production
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+CMD ["npm", "start"]
