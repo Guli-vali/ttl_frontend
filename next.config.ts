@@ -1,9 +1,10 @@
+// next.config.ts
 import withPWA from 'next-pwa';
 import type { NextConfig } from 'next';
 
 const config: NextConfig = {
   reactStrictMode: true,
-  // другие настройки
+  // любые другие настройки
 };
 
 export default withPWA({

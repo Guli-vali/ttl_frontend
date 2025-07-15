@@ -6,7 +6,7 @@ declare module 'next-pwa' {
     disable?: boolean;
     register?: boolean;
     skipWaiting?: boolean;
-    // добавь другие поля по необходимости
+    // другие опции по желанию
   }) => (config: NextConfig) => NextConfig;
 
   export default withPWA;
