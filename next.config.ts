@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 
 const config: NextConfig = {
   reactStrictMode: true,
-  // другие опции
+  // другие настройки
 };
 
 export default withPWA({
