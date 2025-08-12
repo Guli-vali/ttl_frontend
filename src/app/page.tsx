@@ -1,19 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle } from 'lucide-react';
 import CardItem from '@/components/CardItem';
 import CardForm from '@/components/CardForm';
+import BottomNav from '@/components/BottomNav';
+import { useCards } from '@/hooks/useCards';
 
-interface Card {
-  id: number;
-  title: string;
-  text: string;
-  language: string;
-}
 
 export default function HomePage() {
-  const [cards, setCards] = useState<Card[]>([
+  const { cards, addCard, deleteCard } = useCards([
     { id: 1, title: 'Карточка 1', text: 'Содержимое карточки 1', language: 'English' },
     { id: 2, title: 'Карточка 2', text: 'Содержимое карточки 2', language: 'Русский' },
     { id: 3, title: 'Карточка 3', text: 'Содержимое карточки 3', language: 'Deutsch' },
@@ -28,18 +23,15 @@ export default function HomePage() {
 
   const handleAddCard = () => {
     if (!title.trim()) return;
-
-    const newCard: Card = {
-      id: cards.length + 1,
-      title,
-      text,
-      language,
-    };
-    setCards([newCard, ...cards]);
+    addCard({ title, text, language });
     setTitle('');
     setText('');
     setLanguage('English');
     setShowForm(false);
+  };
+
+  const handleDeleteCard = (id: number) => {
+    deleteCard(id);
   };
 
   const filteredCards = cards.filter((card) =>
@@ -94,22 +86,10 @@ export default function HomePage() {
         {/* Фид карточек */}
         <div className="flex flex-col-reverse space-y-reverse space-y-4 pb-16">
           {filteredCards.map((card) => (
-            <CardItem key={card.id} card={card} />
+            <CardItem key={card.id} card={card} onDelete={() => handleDeleteCard(card.id)} />
           ))}
         </div>
       </main>
-
-      {/* Нижняя панель */}
-      {/* Нижняя панель */}
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex flex-col items-center text-gray-700 hover:text-blue-600"
-        >
-          <PlusCircle size={42} />
-          <span className="text-xs">Добавить</span>
-        </button>
-      </nav>
     </div>
   );
 }

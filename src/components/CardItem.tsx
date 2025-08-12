@@ -1,20 +1,29 @@
-import React from 'react';
+import { X } from 'lucide-react'; // Добавьте импорт иконки
+import { Card } from '../types/card';
 
-interface CardProps {
-  card: {
-    id: number;
-    title: string;
-    text: string;
-    language: string;
-  };
+
+interface CardItemProps {
+  card: Card;
+  onDelete?: () => void;
 }
 
-const CardItem: React.FC<CardProps> = ({ card }) => (
-  <div className="p-4 bg-gray-100 rounded shadow">
-    <h2 className="text-xl font-semibold">{card.title}</h2>
-    <p>{card.text}</p>
-    <p className="text-sm text-gray-500 mt-1">Язык: {card.language}</p>
-  </div>
-);
-
-export default CardItem;
+export default function CardItem({ card, onDelete }: CardItemProps) {
+  return (
+    <div className="bg-white p-4 rounded shadow flex justify-between items-center">
+      <div>
+        <div className="font-bold">{card.title}</div>
+        <div>{card.text}</div>
+        <div className="text-xs text-gray-500">{card.language}</div>
+      </div>
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          className="ml-2 p-1 rounded-full border-2 border-black bg-yellow-300 hover:bg-yellow-200 transition-colors flex items-center justify-center"
+          aria-label="Удалить"
+        >
+          <X size={18} className="text-black" />
+        </button>
+      )}
+    </div>
+  );
+}
