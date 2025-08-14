@@ -3,7 +3,7 @@
 import { PlusCircle, User, Home } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function BottomNav({ onAdd }: { onAdd?: () => void }) {
+export default function BottomNav() {
   const router = useRouter();
 
   return (
@@ -18,7 +18,7 @@ export default function BottomNav({ onAdd }: { onAdd?: () => void }) {
         <span className="text-xs">Фид</span>
       </button>
       <button
-        onClick={onAdd}
+        onClick={() => router.push('/cards/create')}
         className="flex flex-col items-center text-gray-700 hover:text-black"
       >
         <PlusCircle size={42} />
