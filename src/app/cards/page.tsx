@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import CardItem from '@/components/CardItem';
-import CardForm from '@/components/CardForm';
-import { useCards } from '@/hooks/useCards';
 import { useCardsStore } from '@/store/useCardsStore';
 
 
