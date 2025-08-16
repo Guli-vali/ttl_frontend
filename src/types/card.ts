@@ -1,7 +1,9 @@
+import { Profile } from '@/store/useProfileStore';
 
-export interface Card {
+export type Card = {
   id: number;
   title: string;
   text: string;
   language: string;
-}
+  author: Profile; // Добавляем автора
+};
