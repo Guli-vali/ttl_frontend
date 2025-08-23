@@ -2,7 +2,6 @@
 import { create } from 'zustand';
 import { useProfileStore } from './useProfileStore';
 import { Card } from '@/types/card';
-import { Profile } from './useProfileStore';
 
 // Начальные карточки с обновленной структурой автора
 const initialCards: Card[] = [
