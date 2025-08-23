@@ -30,9 +30,14 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
     );
   }
 
-  if (!isAuthenticated) {
-    return <AuthPage />;
-  }
-
-  return <>{children}</>;
+  return (
+    <>
+      <div style={{ display: isAuthenticated ? 'none' : 'block' }}>
+        <AuthPage />
+      </div>
+      <div style={{ display: isAuthenticated ? 'block' : 'none' }}>
+        {children}
+      </div>
+    </>
+  );
 }
