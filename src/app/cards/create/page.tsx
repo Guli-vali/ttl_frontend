@@ -5,9 +5,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CardForm from '@/components/CardForm';
 import { useCardsStore } from '@/store/useCardsStore';
+import { useProfileStore } from '@/store/useProfileStore';
 
 export default function CreateCardPage() {
   const addCard = useCardsStore((state) => state.addCard);
+  const profile = useProfileStore((state) => state.profile);
   const router = useRouter();
 
   const [title, setTitle] = useState('');
@@ -16,7 +18,7 @@ export default function CreateCardPage() {
 
   const handleAddCard = () => {
     if (!title.trim()) return;
-    addCard({ title, text, language }); // автор добавится внутри store
+    addCard({ title, text, language }, profile);
     router.push('/cards');
   };
 

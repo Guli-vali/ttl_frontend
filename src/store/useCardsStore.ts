@@ -1,7 +1,7 @@
 // src/store/useCardsStore.ts
 import { create } from 'zustand';
-import { useProfileStore } from './useProfileStore';
 import { Card } from '@/types/card';
+import { Profile } from './useProfileStore';
 
 // Начальные карточки с обновленной структурой автора
 const initialCards: Card[] = [
@@ -89,7 +89,7 @@ const initialCards: Card[] = [
 
 type CardsState = {
   cards: Card[];
-  addCard: (data: { title: string; text: string; language: string }) => void;
+  addCard: (data: { title: string; text: string; language: string }, author: Profile) => void;
   removeCard: (id: number) => void;
   getCardsByLanguage: (language: string) => Card[];
 };
@@ -97,15 +97,14 @@ type CardsState = {
 export const useCardsStore = create<CardsState>((set, get) => ({
   cards: initialCards,
 
-  addCard: (data) =>
+  addCard: (data, author) =>
     set((state) => {
-      const profile = useProfileStore.getState().profile;
       return {
         cards: [
           {
             id: Date.now(),
             ...data,
-            author: profile,
+            author: author,
           },
           ...state.cards,
         ],
