@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#317EFB",
+  themeColor: "#FFDF20",
 };
 
 export default function RootLayout({
@@ -43,7 +43,7 @@ export default function RootLayout({
       <head>
         {/* Можно оставить для гарантии */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#317EFB" />
+        <meta name="theme-color" content="#FFDF20" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
