@@ -2,16 +2,21 @@
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/types/card';
+import { Card } from '@/store/useCardsStore';
+import { Profile } from '@/store/useProfileStore';
 
 interface CardItemProps {
   card: Card;
+  currentUser: Profile | null;
   onDelete?: () => void;
 }
 
-export default function CardItem({ card, onDelete }: CardItemProps) {
+export default function CardItem({ card, currentUser, onDelete }: CardItemProps) {
   const router = useRouter();
   const { author } = card;
+
+  // Проверяем, принадлежит ли карточка текущему пользователю
+  const isOwnCard = currentUser && author.id === currentUser.id;
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Предотвращаем навигацию при клике на кнопку удаления
@@ -26,8 +31,8 @@ export default function CardItem({ card, onDelete }: CardItemProps) {
       className="bg-white p-4 rounded-2xl shadow relative border border-gray-200 cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-[1.02]"
       onClick={handleCardClick}
     >
-      {/* Кнопка удаления — в правом верхнем углу */}
-      {onDelete && (
+      {/* Кнопка удаления — только для карточек пользователя */}
+      {isOwnCard && onDelete && (
         <button
           onClick={(e) => {
             e.stopPropagation(); // Предотвращаем всплытие события
@@ -65,7 +70,7 @@ export default function CardItem({ card, onDelete }: CardItemProps) {
           <div className="text-sm">
             <div className="font-medium text-black">{author.name}</div>
             <div className="text-gray-600 text-xs">
-              {author.nativeLanguages.length > 0 ? (
+              {author.nativeLanguages && author.nativeLanguages.length > 0 ? (
                 author.nativeLanguages.length <= 3 ? (
                   `Языки: ${author.nativeLanguages.join(', ')}`
                 ) : (

@@ -6,11 +6,41 @@ import { LogOut, MapPin, Globe, Heart, Edit } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 
 export default function ProfilePage() {
-  const { profile, logout } = useProfileStore();
+  const { profile, logout, isLoading, error } = useProfileStore();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
+
+  // Показываем загрузку
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
+        <div className="text-black text-xl font-bold">Загрузка профиля...</div>
+      </div>
+    );
+  }
+
+  // Показываем ошибку
+  if (error) {
+    return (
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center p-4">
+        <div className="text-red-600 text-center">
+          <p className="text-lg font-bold mb-2">Ошибка загрузки профиля</p>
+          <p className="text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Проверяем наличие профиля
+  if (!profile) {
+    return (
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
+        <div className="text-black text-xl font-bold">Профиль не найден</div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
@@ -72,14 +102,18 @@ export default function ProfilePage() {
               Владею языками
             </h3>
             <div className="flex flex-wrap gap-2">
-              {profile.nativeLanguages.map((language) => (
-                <span
-                  key={language}
-                  className="px-3 py-1 bg-black text-yellow-300 rounded-full text-sm font-medium border-2 border-black"
-                >
-                  {language}
-                </span>
-              ))}
+              {profile.nativeLanguages && profile.nativeLanguages.length > 0 ? (
+                profile.nativeLanguages.map((language) => (
+                  <span
+                    key={language}
+                    className="px-3 py-1 bg-black text-yellow-300 rounded-full text-sm font-medium border-2 border-black"
+                  >
+                    {language}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">Не указаны</p>
+              )}
             </div>
           </div>
 
@@ -89,20 +123,24 @@ export default function ProfilePage() {
               Изучаю языки
             </h3>
             <div className="flex flex-wrap gap-2">
-              {profile.learningLanguages.map((language) => (
-                <span
-                  key={language}
-                  className="px-3 py-1 bg-yellow-300 text-black rounded-full text-sm font-medium border-2 border-black"
-                >
-                  {language}
-                </span>
-              ))}
+              {profile.learningLanguages && profile.learningLanguages.length > 0 ? (
+                profile.learningLanguages.map((language) => (
+                  <span
+                    key={language}
+                    className="px-3 py-1 bg-yellow-300 text-black rounded-full text-sm font-medium border-2 border-black"
+                  >
+                    {language}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">Не указаны</p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Интересы */}
-        {profile.interests.length > 0 && (
+        {profile.interests && profile.interests.length > 0 && (
           <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
             <h3 className="font-bold text-lg mb-3">Интересы</h3>
             <div className="flex flex-wrap gap-2">

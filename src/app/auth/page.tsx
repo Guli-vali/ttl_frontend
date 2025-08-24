@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Globe, Heart, User } from 'lucide-react';
-import { useProfileStore, Profile } from '@/store/useProfileStore';
+import { useProfileStore } from '@/store/useProfileStore';
 
 const LANGUAGES = [
   'Русский', 'English', 'Español', 'Français', 'Deutsch', 'Italiano',
@@ -26,18 +26,18 @@ const INTERESTS = [
 
 export default function AuthPage() {
   const router = useRouter();
-  const login = useProfileStore((state) => state.login);
+  const { login, register, isLoading, error } = useProfileStore();
 
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState(1); // Шаги регистрации
+  const [step, setStep] = useState(1);
 
   // Основная информация
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirm: '',
     age: '',
     country: '',
     city: '',
@@ -52,11 +52,12 @@ export default function AuthPage() {
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Введите имя';
+    if (!isLogin && !formData.name.trim()) newErrors.name = 'Введите имя';
     if (!formData.email.trim()) newErrors.email = 'Введите email';
     if (!isLogin && !formData.password) newErrors.password = 'Введите пароль';
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Пароли не совпадают';
+    if (isLogin && !formData.password) newErrors.password = 'Введите пароль';
+    if (!isLogin && formData.password !== formData.passwordConfirm) {
+      newErrors.passwordConfirm = 'Пароли не совпадают';
     }
 
     setErrors(newErrors);
@@ -109,24 +110,13 @@ export default function AuthPage() {
     }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!validateStep1()) return;
 
-    // Имитация входа
-    const profile: Profile = {
-      id: Date.now(),
-      name: formData.name,
-      email: formData.email,
-      bio: 'Люблю изучать языки и общаться с людьми!',
-      nativeLanguages: ['Русский'],
-      learningLanguages: ['English'],
-      country: 'Россия',
-      interests: ['Путешествия', 'Музыка'],
-      isRegistered: true,
-    };
-
-    login(profile);
-    router.push('/cards');
+    const success = await login(formData.email, formData.password);
+    if (success) {
+      router.push('/cards');
+    }
   };
 
   const handleNextStep = () => {
@@ -137,37 +127,40 @@ export default function AuthPage() {
     }
   };
 
-  const handleRegister = () => {
-    const profile: Profile = {
-      id: Date.now(),
-      name: formData.name,
+  const handleRegister = async () => {
+    const success = await register({
       email: formData.email,
-      bio: formData.bio || 'Привет! Я изучаю языки и готов к общению!',
+      password: formData.password,
+      passwordConfirm: formData.passwordConfirm,
+      name: formData.name,
+      bio: formData.bio,
+      nativeLanguages: formData.nativeLanguages,
+      learningLanguages: formData.learningLanguages,
       age: formData.age ? parseInt(formData.age) : undefined,
       country: formData.country,
       city: formData.city,
-      nativeLanguages: formData.nativeLanguages,
-      learningLanguages: formData.learningLanguages,
       interests: formData.interests,
-      isRegistered: true,
-    };
+    });
 
-    login(profile);
-    router.push('/cards');
+    if (success) {
+      router.push('/cards');
+    }
   };
 
   const renderStep1 = () => (
     <div className="space-y-4">
-      <div>
-        <input
-          type="text"
-          placeholder="Имя"
-          value={formData.name}
-          onChange={(e) => setFormData({...formData, name: e.target.value})}
-          className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
-        />
-        {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
-      </div>
+      {!isLogin && (
+        <div>
+          <input
+            type="text"
+            placeholder="Имя"
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
+          />
+          {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+        </div>
+      )}
 
       <div>
         <input
@@ -180,35 +173,35 @@ export default function AuthPage() {
         {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
       </div>
 
+      <div className="relative">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Пароль"
+          value={formData.password}
+          onChange={(e) => setFormData({...formData, password: e.target.value})}
+          className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black pr-12"
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-3 text-gray-500 hover:text-black"
+        >
+          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+        </button>
+        {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
+      </div>
+
       {!isLogin && (
         <>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Пароль"
-              value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
-              className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black pr-12"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-500 hover:text-black"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
-          </div>
-
           <div>
             <input
               type="password"
               placeholder="Подтвердите пароль"
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+              value={formData.passwordConfirm}
+              onChange={(e) => setFormData({...formData, passwordConfirm: e.target.value})}
               className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
             />
-            {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
+            {errors.passwordConfirm && <p className="text-red-600 text-sm mt-1">{errors.passwordConfirm}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -371,14 +364,22 @@ export default function AuthPage() {
         {/* Формы */}
         {isLogin || step === 1 ? renderStep1() : step === 2 ? renderStep2() : renderStep3()}
 
+        {/* Ошибка */}
+        {error && (
+          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
+
         {/* Кнопки */}
         <div className="mt-6 space-y-3">
           {isLogin ? (
             <button
               onClick={handleLogin}
-              className="w-full bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black"
+              disabled={isLoading}
+              className="w-full bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Войти
+              {isLoading ? 'Вход...' : 'Войти'}
             </button>
           ) : step < 3 ? (
             <div className="flex gap-3">
@@ -407,9 +408,10 @@ export default function AuthPage() {
               </button>
               <button
                 onClick={handleRegister}
-                className="flex-1 bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black"
+                disabled={isLoading}
+                className="flex-1 bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Готово
+                {isLoading ? 'Регистрация...' : 'Готово'}
               </button>
             </div>
           )}

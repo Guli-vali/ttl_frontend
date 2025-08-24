@@ -1,123 +1,198 @@
 // src/store/useCardsStore.ts
 import { create } from 'zustand';
-import { Card } from '@/types/card';
-import { Profile } from './useProfileStore';
+import { cardsApi } from '@/lib/api';
+import { useProfileStore } from './useProfileStore';
+import type { Profile } from './useProfileStore';
 
-// Начальные карточки с обновленной структурой автора
-const initialCards: Card[] = [
-  {
-    id: 1,
-    title: 'English Practice',
-    text: 'Let\'s talk about your favorite book!',
-    language: 'English',
-    author: {
-      id: 2,
-      name: 'Анна Смирнова',
-      email: 'anna@example.com',
-      bio: 'Изучаю английский язык уже 3 года. Люблю читать и путешествовать.',
-      avatarUrl: '',
-      nativeLanguages: ['Русский'],
-      learningLanguages: ['English', 'Français'],
-      age: 25,
-      country: 'Россия',
-      city: 'Москва',
-      interests: ['Книги', 'Путешествия', 'Кино'],
-      isRegistered: true,
-    },
-  },
-  {
-    id: 2,
-    title: 'Русский разговор',
-    text: 'Как прошёл твой день? Давайте поговорим о повседневной жизни!',
-    language: 'Русский',
-    author: {
-      id: 3,
-      name: 'John Smith',
-      email: 'john@example.com',
-      bio: 'Learning Russian for 2 years. I love the culture and literature!',
-      avatarUrl: '',
-      nativeLanguages: ['English'],
-      learningLanguages: ['Русский', 'Español'],
-      age: 28,
-      country: 'США',
-      city: 'New York',
-      interests: ['Музыка', 'Спорт', 'История'],
-      isRegistered: true,
-    },
-  },
-  {
-    id: 3,
-    title: 'Deutsch lernen',
-    text: 'Was ist dein Lieblingsessen? Lass uns über deutsche Küche sprechen!',
-    language: 'Deutsch',
-    author: {
-      id: 4,
-      name: 'Marie Dubois',
-      email: 'marie@example.com',
-      bio: 'J\'apprends l\'allemand depuis 1 an. J\'adore la culture allemande!',
-      avatarUrl: '',
-      nativeLanguages: ['Français'],
-      learningLanguages: ['Deutsch', 'Italiano'],
-      age: 23,
-      country: 'Франция',
-      city: 'Paris',
-      interests: ['Искусство', 'Кулинария', 'Музыка'],
-      isRegistered: true,
-    },
-  },
-  {
-    id: 4,
-    title: 'Spanish Chat',
-    text: '¿Cuál es tu ciudad favorita? ¡Hablemos de viajes y lugares increíbles!',
-    language: 'Spanish',
-    author: {
-      id: 5,
-      name: 'Carlos Rodriguez',
-      email: 'carlos@example.com',
-      bio: '¡Hola! Soy de México y me encanta ayudar a la gente a aprender español.',
-      avatarUrl: '',
-      nativeLanguages: ['Español'],
-      learningLanguages: ['English', 'Português'],
-      age: 30,
-      country: 'Мексика',
-      city: 'Mexico City',
-      interests: ['Путешествия', 'Фотография', 'Природа'],
-      isRegistered: true,
-    },
-  },
-];
+export type Card = {
+  id: string;
+  title: string;
+  text: string;
+  language: string;
+  author: Profile;
+};
 
 type CardsState = {
   cards: Card[];
-  addCard: (data: { title: string; text: string; language: string }, author: Profile) => void;
-  removeCard: (id: number) => void;
+  isLoading: boolean;
+  error: string | null;
+  isInitialized: boolean;
+  lastLoadTime: number; // Добавляем время последней загрузки
+  
+  // Actions
+  loadCards: (force?: boolean) => Promise<void>;
+  createCard: (data: { title: string; text: string; language: string }) => Promise<boolean>;
+  updateCard: (id: string, data: Partial<Card>) => Promise<boolean>;
+  deleteCard: (id: string) => Promise<boolean>;
+  getCardById: (id: string) => Card | undefined;
   getCardsByLanguage: (language: string) => Card[];
+  getAvailableLanguages: () => string[];
+  clearError: () => void;
+  reset: () => void;
 };
 
 export const useCardsStore = create<CardsState>((set, get) => ({
-  cards: initialCards,
+  cards: [],
+  isLoading: false,
+  error: null,
+  isInitialized: false,
+  lastLoadTime: 0,
 
-  addCard: (data, author) =>
-    set((state) => {
-      return {
-        cards: [
-          {
-            id: Date.now(),
-            ...data,
-            author: author,
-          },
-          ...state.cards,
-        ],
-      };
-    }),
+  loadCards: async (force = false) => {
+    const state = get();
+    const now = Date.now();
+    
+    // Предотвращаем повторные запросы, если не принудительная загрузка
+    if (state.isLoading && !force) {
+      return;
+    }
 
-  removeCard: (id) =>
-    set((state) => ({
-      cards: state.cards.filter((card) => card.id !== id),
-    })),
+    // Дебаунсинг: не загружаем чаще чем раз в 2 секунды
+    if (!force && state.isInitialized && (now - state.lastLoadTime) < 2000) {
+      return;
+    }
 
-  getCardsByLanguage: (language) => {
+    set({ isLoading: true, error: null });
+    try {
+      const cardRecords = await cardsApi.getAll();
+      
+      // Преобразуем записи в нужный формат
+      const cards: Card[] = cardRecords.map(record => ({
+        id: record.id,
+        title: record.title,
+        text: record.text,
+        language: record.language,
+        author: record.expand?.author ? {
+          id: record.expand.author.id,
+          name: record.expand.author.name,
+          email: record.expand.author.email,
+          bio: record.expand.author.bio,
+          avatarUrl: record.expand.author.avatarUrl,
+          nativeLanguages: record.expand.author.nativeLanguages || [],
+          learningLanguages: record.expand.author.learningLanguages || [],
+          age: record.expand.author.age,
+          country: record.expand.author.country,
+          city: record.expand.author.city,
+          interests: record.expand.author.interests || [],
+          isRegistered: record.expand.author.isRegistered,
+        } : {
+          id: '',
+          name: 'Неизвестный автор',
+          email: '',
+          bio: '',
+          avatarUrl: '',
+          nativeLanguages: [],
+          learningLanguages: [],
+          age: undefined,
+          country: '',
+          city: '',
+          interests: [],
+          isRegistered: false,
+        }
+      }));
+
+      set({ 
+        cards, 
+        isLoading: false, 
+        isInitialized: true, 
+        lastLoadTime: now 
+      });
+    } catch (error) {
+      console.error('Error loading cards:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка загрузки карточек', 
+        isLoading: false,
+        isInitialized: true,
+        lastLoadTime: now
+      });
+    }
+  },
+
+  createCard: async (data) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { profile } = useProfileStore.getState();
+      if (!profile) {
+        set({ error: 'Необходимо войти в систему', isLoading: false });
+        return false;
+      }
+
+      await cardsApi.create({
+        ...data,
+        author: profile.id,
+      });
+
+      // Принудительно перезагружаем карточки
+      await get().loadCards(true);
+      return true;
+    } catch (error) {
+      console.error('Error creating card:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка создания карточки', 
+        isLoading: false 
+      });
+      return false;
+    }
+  },
+
+  updateCard: async (id: string, data) => {
+    set({ isLoading: true, error: null });
+    try {
+      await cardsApi.update(id, data);
+      await get().loadCards(true);
+      return true;
+    } catch (error) {
+      console.error('Error updating card:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка обновления карточки', 
+        isLoading: false 
+      });
+      return false;
+    }
+  },
+
+  deleteCard: async (id: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      await cardsApi.delete(id);
+      await get().loadCards(true);
+      return true;
+    } catch (error) {
+      console.error('Error deleting card:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Ошибка удаления карточки', 
+        isLoading: false 
+      });
+      return false;
+    }
+  },
+
+  getCardById: (id: string) => {
+    return get().cards.find(card => card.id === id);
+  },
+
+  getCardsByLanguage: (language: string) => {
     const state = get();
     return state.cards.filter((card) => card.language === language);
+  },
+
+  getAvailableLanguages: () => {
+    const state = get();
+    const languages = [...new Set(state.cards.map(card => card.language))];
+    return languages.sort();
+  },
+
+  clearError: () => {
+    set({ error: null });
+  },
+
+  reset: () => {
+    set({ 
+      cards: [], 
+      isLoading: false, 
+      error: null, 
+      isInitialized: false,
+      lastLoadTime: 0
+    });
   },
 }));

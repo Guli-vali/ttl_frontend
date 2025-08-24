@@ -1,0 +1,77 @@
+[
+  {
+    "id": "pbc_3414089003",
+    "name": "messages",
+    "type": "base",
+    "system": false,
+    "listRule": "@request.auth.id != ''",
+    "viewRule": "@request.auth.id != ''",
+    "createRule": "@request.auth.id != ''",
+    "updateRule": "author = @request.auth.id",
+    "deleteRule": "author = @request.auth.id",
+    "fields": [
+      {
+        "id": "text",
+        "name": "text",
+        "type": "text",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "hidden": false,
+        "primaryKey": false,
+        "pattern": "",
+        "min": 1,
+        "max": 1000,
+        "autogeneratePattern": "",
+        "presentable": false
+      },
+      {
+        "id": "card",
+        "name": "card",
+        "type": "relation",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "hidden": false,
+        "primaryKey": false,
+        "collectionId": "pbc_3414089002",
+        "cascadeDelete": true,
+        "minSelect": null,
+        "maxSelect": 1,
+        "displayFields": ["title"],
+        "presentable": false
+      },
+      {
+        "id": "author",
+        "name": "author",
+        "type": "relation",
+        "system": false,
+        "required": true,
+        "unique": false,
+        "hidden": false,
+        "primaryKey": false,
+        "collectionId": "_pb_users_auth_",
+        "cascadeDelete": false,
+        "minSelect": null,
+        "maxSelect": 1,
+        "displayFields": ["name", "avatarUrl"],
+        "presentable": false
+      },
+      {
+        "id": "autodate_created",
+        "name": "created",
+        "type": "autodate",
+        "system": false,
+        "onCreate": true,
+        "onUpdate": false,
+        "hidden": false,
+        "presentable": false
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX idx_messages_card ON messages (card)",
+      "CREATE INDEX idx_messages_author ON messages (author)",
+      "CREATE INDEX idx_messages_created ON messages (created)"
+    ]
+  }
+]

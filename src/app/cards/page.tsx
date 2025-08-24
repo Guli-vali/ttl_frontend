@@ -1,61 +1,128 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useCallback, useRef, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import CardItem from '@/components/CardItem';
+import LanguageFilter from '@/components/LanguageFilter';
 import { useCardsStore } from '@/store/useCardsStore';
+import { useProfileStore } from '@/store/useProfileStore';
 
+export default function CardsPage() {
+  const router = useRouter();
+  const { cards, loadCards, isLoading, error, isInitialized, clearError } = useCardsStore();
+  const currentUser = useProfileStore((state) => state.profile);
+  const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('all');
 
+  // Получаем уникальные языки из карточек
+  const availableLanguages = useMemo(() => {
+    const languages = [...new Set(cards.map(card => card.language))];
+    return languages.sort();
+  }, [cards]);
 
-export default function HomePage() {
-  const cards = useCardsStore((state) => state.cards);
-  const removeCard = useCardsStore((state) => state.removeCard);
+  // Фильтруем карточки по выбранному языку
+  const filteredCards = useMemo(() => {
+    if (selectedLanguage === 'all') {
+      return cards;
+    }
+    return cards.filter(card => card.language === selectedLanguage);
+  }, [cards, selectedLanguage]);
 
+  const handleLoadCards = useCallback(async () => {
+    // Отменяем предыдущий таймаут
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+    }
 
-  const [filterLanguage, setFilterLanguage] = useState<string>('');
+    // Добавляем небольшую задержку для предотвращения быстрых запросов
+    loadTimeoutRef.current = setTimeout(async () => {
+      clearError();
+      await loadCards(true);
+    }, 300);
+  }, [loadCards, clearError]);
 
+  useEffect(() => {
+    // Загружаем карточки при первом рендере
+    if (!isInitialized) {
+      handleLoadCards();
+    }
+  }, [isInitialized, handleLoadCards]);
 
-  const filteredCards = cards.filter((card) =>
-    filterLanguage ? card.language === filterLanguage : true
-  );
+  // Очищаем таймаут при размонтировании
+  useEffect(() => {
+    return () => {
+      if (loadTimeoutRef.current) {
+        clearTimeout(loadTimeoutRef.current);
+      }
+    };
+  }, []);
 
-  const uniqueLanguages = Array.from(new Set(cards.map((card) => card.language)));
+  if (isLoading && !isInitialized) {
+    return (
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
+        <div className="text-black text-xl font-bold">Загрузка карточек...</div>
+      </div>
+    );
+  }
+
+  if (error && !isInitialized) {
+    return (
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center p-4">
+        <div className="text-red-600 text-center">
+          <p className="text-lg font-bold mb-2">Ошибка загрузки</p>
+          <p className="text-sm mb-4">{error}</p>
+          <button 
+            onClick={handleLoadCards}
+            className="bg-black text-yellow-300 px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-800 transition-colors"
+          >
+            Попробовать снова
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
-      {/* Хедер */}
-      <header className="p-6 text-black text-left text-3xl font-bold">Карточки</header>
-
-      {/* Контент */}
-      <main className="flex-1 overflow-y-auto p-4">
+      <header className="p-6 text-black text-left text-3xl font-bold">
+        Карточки
+      </header>
+      
+      <main className="flex-1 p-4 space-y-4 pb-20">
         {/* Фильтр по языкам */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button
-            onClick={() => setFilterLanguage('')}
-            className={`px-3 py-1 rounded-full border-2 border-black text-sm font-medium ${
-              filterLanguage === '' ? 'bg-black text-yellow-300' : 'bg-yellow-300 text-black hover:bg-yellow-200'
-            } transition-colors`}
-          >
-            Все языки
-          </button>
-          {uniqueLanguages.map((lang) => (
-            <button
-              key={lang}
-              onClick={() => setFilterLanguage(lang)}
-              className={`px-3 py-1 rounded-full border-2 border-black text-sm font-medium ${
-                filterLanguage === lang ? 'bg-black text-yellow-300' : 'bg-yellow-300 text-black hover:bg-yellow-200'
-              } transition-colors`}
-            >
-              {lang}
-            </button>
-          ))}
+        <div className="mb-4">
+          <LanguageFilter
+            selectedLanguage={selectedLanguage}
+            onLanguageChange={setSelectedLanguage}
+            availableLanguages={availableLanguages}
+          />
         </div>
 
-        {/* Фид карточек */}
-        <div className="flex flex-col-reverse space-y-reverse space-y-4 pb-16">
-          {filteredCards.map((card) => (
-            <CardItem key={card.id} card={card} onDelete={() => removeCard(card.id)} />
-          ))}
-        </div>
+        {isLoading && (
+          <div className="text-center py-4">
+            <div className="text-black text-sm">Обновление...</div>
+          </div>
+        )}
+
+        {filteredCards.length === 0 && !isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600">
+              {selectedLanguage === 'all' 
+                ? 'Карточки не найдены' 
+                : `Карточки на языке "${selectedLanguage}" не найдены`
+              }
+            </p>
+          </div>
+        ) : (
+          filteredCards.map((card) => (
+            <CardItem 
+              key={card.id} 
+              card={card}
+              currentUser={currentUser}
+              onDelete={() => useCardsStore.getState().deleteCard(card.id)}
+            />
+          ))
+        )}
       </main>
     </div>
   );
