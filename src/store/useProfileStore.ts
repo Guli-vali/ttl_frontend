@@ -1,7 +1,6 @@
 // src/store/useProfileStore.ts
 import { create } from 'zustand';
 import { authApi } from '@/lib/api';
-import type { UserRecord } from '@/lib/pocketbase';
 
 export type Profile = {
   id: string;

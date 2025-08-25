@@ -1,14 +1,12 @@
 'use client';
 
 import { useEffect, useCallback, useRef, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import CardItem from '@/components/CardItem';
+import CardItem from '@/components/cards/CardItem';
 import LanguageFilter from '@/components/LanguageFilter';
 import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
 
 export default function CardsPage() {
-  const router = useRouter();
   const { cards, loadCards, isLoading, error, isInitialized, clearError } = useCardsStore();
   const currentUser = useProfileStore((state) => state.profile);
   const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
