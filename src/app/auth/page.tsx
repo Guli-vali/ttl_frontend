@@ -5,24 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Globe, Heart, User } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
-
-const LANGUAGES = [
-  'Русский', 'English', 'Español', 'Français', 'Deutsch', 'Italiano',
-  '中文', '日本語', '한국어', 'العربية', 'Português', 'Nederlands',
-  'Svenska', 'Polski', 'Türkçe', 'हिन्दी'
-];
-
-const COUNTRIES = [
-  'Россия', 'США', 'Великобритания', 'Германия', 'Франция', 'Испания',
-  'Италия', 'Китай', 'Япония', 'Южная Корея', 'Бразилия', 'Канада',
-  'Австралия', 'Нидерланды', 'Швеция', 'Польша', 'Турция', 'Индия'
-];
-
-const INTERESTS = [
-  'Путешествия', 'Кино', 'Музыка', 'Спорт', 'Кулинария', 'Книги',
-  'Искусство', 'Технологии', 'Фотография', 'Игры', 'Мода', 'История',
-  'Наука', 'Природа', 'Танцы', 'Йога'
-];
+import { LANGUAGES, COUNTRIES, INTERESTS } from '@/constants';
 
 export default function AuthPage() {
   const router = useRouter();

@@ -2,8 +2,8 @@
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/store/useCardsStore';
-import { Profile } from '@/store/useProfileStore';
+import { Card } from '@/types';
+import { Profile } from '@/types';
 
 interface CardItemProps {
   card: Card;

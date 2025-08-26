@@ -1,36 +1,11 @@
 import { create } from 'zustand';
-import { messagesApi } from '@/lib/api';
+import { messagesApi } from '@/lib/api/messages';
 import { pb } from '@/lib/pocketbase';
-import type { MessageRecord } from '@/lib/pocketbase';
+import { MessagesState } from '@/types/store';
+import { MessageRecord } from '@/types/message';
 import { useProfileStore } from './useProfileStore';
-import type { Profile } from './useProfileStore';
-
-export type Message = {
-  id: string;
-  text: string;
-  cardId: string;
-  author: Profile;
-  created: string;
-  updated: string;
-};
-
-type MessagesState = {
-  messages: Record<string, Message[]>; // cardId -> messages[]
-  isLoading: boolean;
-  error: string | null;
-  isInitialized: boolean;
-  
-  // Actions
-  loadMessages: (cardId: string, force?: boolean) => Promise<void>;
-  sendMessage: (cardId: string, text: string) => Promise<boolean>;
-  deleteMessage: (messageId: string) => Promise<boolean>;
-  clearMessages: (cardId: string) => void;
-  clearError: () => void;
-  reset: () => void;
-
-  // Добавляем стабильный селектор
-  getMessagesByCardId: (cardId: string) => Message[];
-};
+import { transformMessageRecord } from '@/lib/utils/transformers';
+import { handleMessagesError } from '@/lib/utils/errorHandlers';
 
 export const useMessagesStore = create<MessagesState>((set, get) => ({
   messages: {},
@@ -51,40 +26,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
       const messageRecords = await messagesApi.getByCard(cardId);
       
       // Преобразуем записи в нужный формат
-      const messages: Message[] = messageRecords.map(record => ({
-        id: record.id,
-        text: record.text,
-        cardId: record.card,
-        author: record.expand?.author ? {
-          id: record.expand.author.id,
-          name: record.expand.author.name,
-          email: record.expand.author.email,
-          bio: record.expand.author.bio,
-          avatarUrl: record.expand.author.avatarUrl,
-          nativeLanguages: record.expand.author.nativeLanguages || [],
-          learningLanguages: record.expand.author.learningLanguages || [],
-          age: record.expand.author.age,
-          country: record.expand.author.country,
-          city: record.expand.author.city,
-          interests: record.expand.author.interests || [],
-          isRegistered: record.expand.author.isRegistered,
-        } : {
-          id: '',
-          name: 'Неизвестный автор',
-          email: '',
-          bio: '',
-          avatarUrl: '',
-          nativeLanguages: [],
-          learningLanguages: [],
-          age: undefined,
-          country: '',
-          city: '',
-          interests: [],
-          isRegistered: false,
-        },
-        created: record.created,
-        updated: record.updated,
-      }));
+      const messages = messageRecords.map(transformMessageRecord);
 
       set(state => ({
         messages: {
@@ -95,9 +37,9 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
         isInitialized: true
       }));
     } catch (error) {
-      console.error('Error loading messages:', error);
+      const errorMessage = handleMessagesError(error, 'LOAD_MESSAGES');
       set({ 
-        error: error instanceof Error ? error.message : 'Ошибка загрузки сообщений', 
+        error: errorMessage, 
         isLoading: false,
         isInitialized: true
       });
@@ -120,14 +62,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
       });
 
       // Добавляем новое сообщение в store
-      const newMessage: Message = {
-        id: messageRecord.id,
-        text: messageRecord.text,
-        cardId: messageRecord.card,
-        author: profile,
-        created: messageRecord.created,
-        updated: messageRecord.updated,
-      };
+      const newMessage = transformMessageRecord(messageRecord);
 
       set(state => ({
         messages: {
@@ -139,9 +74,9 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
 
       return true;
     } catch (error) {
-      console.error('Error sending message:', error);
+      const errorMessage = handleMessagesError(error, 'SEND_MESSAGE');
       set({ 
-        error: error instanceof Error ? error.message : 'Ошибка отправки сообщения', 
+        error: errorMessage, 
         isLoading: false 
       });
       return false;
@@ -164,9 +99,9 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
 
       return true;
     } catch (error) {
-      console.error('Error deleting message:', error);
+      const errorMessage = handleMessagesError(error, 'DELETE_MESSAGE');
       set({ 
-        error: error instanceof Error ? error.message : 'Ошибка удаления сообщения', 
+        error: errorMessage, 
         isLoading: false 
       });
       return false;
@@ -218,40 +153,7 @@ export const initializeMessagesRealtime = () => {
         
         // Загружаем полную информацию о сообщении с автором
         messagesApi.getById(messageRecord.id).then(fullRecord => {
-          const newMessage: Message = {
-            id: fullRecord.id,
-            text: fullRecord.text,
-            cardId: fullRecord.card,
-            author: fullRecord.expand?.author ? {
-              id: fullRecord.expand.author.id,
-              name: fullRecord.expand.author.name,
-              email: fullRecord.expand.author.email,
-              bio: fullRecord.expand.author.bio,
-              avatarUrl: fullRecord.expand.author.avatarUrl,
-              nativeLanguages: fullRecord.expand.author.nativeLanguages || [],
-              learningLanguages: fullRecord.expand.author.learningLanguages || [],
-              age: fullRecord.expand.author.age,
-              country: fullRecord.expand.author.country,
-              city: fullRecord.expand.author.city,
-              interests: fullRecord.expand.author.interests || [],
-              isRegistered: fullRecord.expand.author.isRegistered,
-            } : {
-              id: '',
-              name: 'Неизвестный автор',
-              email: '',
-              bio: '',
-              avatarUrl: '',
-              nativeLanguages: [],
-              learningLanguages: [],
-              age: undefined,
-              country: '',
-              city: '',
-              interests: [],
-              isRegistered: false,
-            },
-            created: fullRecord.created,
-            updated: fullRecord.updated,
-          };
+          const newMessage = transformMessageRecord(fullRecord);
 
           // Добавляем сообщение только если его еще нет
           const currentMessages = state.messages[messageRecord.card] || [];

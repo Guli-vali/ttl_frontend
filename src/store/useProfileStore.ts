@@ -1,47 +1,9 @@
 // src/store/useProfileStore.ts
 import { create } from 'zustand';
-import { authApi } from '@/lib/api';
-
-export type Profile = {
-  id: string;
-  name: string;
-  email: string;
-  bio?: string;
-  avatarUrl?: string;
-  nativeLanguages?: string[];
-  learningLanguages?: string[];
-  age?: number;
-  country?: string;
-  city?: string;
-  interests?: string[];
-  isRegistered?: boolean;
-};
-
-type ProfileState = {
-  profile: Profile | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-  
-  // Actions
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (data: {
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    name: string;
-    bio?: string;
-    nativeLanguages?: string[];
-    learningLanguages?: string[];
-    age?: number;
-    country?: string;
-    city?: string;
-    interests?: string[];
-  }) => Promise<boolean>;
-  logout: () => Promise<void>;
-  updateProfile: (data: Partial<Profile>) => Promise<boolean>;
-  checkAuth: () => Promise<void>;
-};
+import { authApi } from '@/lib/api/auth';
+import { ProfileState } from '@/types/store';
+import { createProfileFromUser } from '@/lib/utils/transformers';
+import { handleAuthError } from '@/lib/utils/errorHandlers';
 
 export const useProfileStore = create<ProfileState>((set, get) => ({
   profile: null,
@@ -54,26 +16,14 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     try {
       const user = await authApi.login(email, password);
       set({ 
-        profile: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          bio: user.bio,
-          avatarUrl: user.avatarUrl,
-          nativeLanguages: user.nativeLanguages,
-          learningLanguages: user.learningLanguages,
-          age: user.age,
-          country: user.country,
-          city: user.city,
-          interests: user.interests,
-          isRegistered: user.isRegistered,
-        },
+        profile: createProfileFromUser(user),
         isAuthenticated: true,
         isLoading: false 
       });
       return true;
     } catch (error) {
-      set({ error: 'Ошибка входа', isLoading: false });
+      const errorMessage = handleAuthError(error, 'LOGIN');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
@@ -83,26 +33,14 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     try {
       const user = await authApi.register(data);
       set({ 
-        profile: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          bio: user.bio,
-          avatarUrl: user.avatarUrl,
-          nativeLanguages: user.nativeLanguages,
-          learningLanguages: user.learningLanguages,
-          age: user.age,
-          country: user.country,
-          city: user.city,
-          interests: user.interests,
-          isRegistered: user.isRegistered,
-        },
+        profile: createProfileFromUser(user),
         isAuthenticated: true,
         isLoading: false 
       });
       return true;
     } catch (error) {
-      set({ error: 'Ошибка регистрации', isLoading: false });
+      const errorMessage = handleAuthError(error, 'REGISTER');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
@@ -118,7 +56,8 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         isLoading: false 
       });
     } catch (error) {
-      set({ error: 'Ошибка выхода', isLoading: false });
+      const errorMessage = handleAuthError(error, 'LOGOUT');
+      set({ error: errorMessage, isLoading: false });
     }
   },
 
@@ -138,7 +77,8 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       });
       return true;
     } catch (error) {
-      set({ error: 'Ошибка обновления профиля', isLoading: false });
+      const errorMessage = handleAuthError(error, 'UPDATE_PROFILE');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
@@ -149,20 +89,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       const user = await authApi.getCurrentUser();
       if (user) {
         set({ 
-          profile: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            bio: user.bio,
-            avatarUrl: user.avatarUrl,
-            nativeLanguages: user.nativeLanguages,
-            learningLanguages: user.learningLanguages,
-            age: user.age,
-            country: user.country,
-            city: user.city,
-            interests: user.interests,
-            isRegistered: user.isRegistered,
-          },
+          profile: createProfileFromUser(user),
           isAuthenticated: true,
           isLoading: false 
         });
@@ -173,12 +100,17 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
           isLoading: false 
         });
       }
-    } catch (error) {
+    } catch {
+      // При ошибке проверки аутентификации просто сбрасываем состояние
       set({ 
         profile: null, 
         isAuthenticated: false, 
         isLoading: false 
       });
     }
+  },
+
+  clearError: () => {
+    set({ error: null });
   },
 }));

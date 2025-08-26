@@ -7,7 +7,7 @@ import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
 
 export default function CardsPage() {
-  const { cards, loadCards, isLoading, error, isInitialized, clearError } = useCardsStore();
+  const { cards, loadCards, deleteCard, isLoading, error, isInitialized, clearError } = useCardsStore();
   const currentUser = useProfileStore((state) => state.profile);
   const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState('all');
@@ -117,7 +117,7 @@ export default function CardsPage() {
               key={card.id} 
               card={card}
               currentUser={currentUser}
-              onDelete={() => useCardsStore.getState().deleteCard(card.id)}
+              onDelete={() => deleteCard(card.id)}
             />
           ))
         )}
