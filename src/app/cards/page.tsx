@@ -5,6 +5,11 @@ import CardItem from '@/components/cards/CardItem';
 import LanguageFilter from '@/components/LanguageFilter';
 import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
+// Добавляем компоненты shadcn/ui
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, RefreshCw } from 'lucide-react';
 
 export default function CardsPage() {
   const { cards, loadCards, deleteCard, isLoading, error, isInitialized, clearError } = useCardsStore();
@@ -58,7 +63,12 @@ export default function CardsPage() {
   if (isLoading && !isInitialized) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
-        <div className="text-black text-xl font-bold">Загрузка карточек...</div>
+        <Card className="w-full max-w-sm">
+          <CardContent className="text-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <div className="text-black text-xl font-bold">Загрузка карточек...</div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -66,16 +76,17 @@ export default function CardsPage() {
   if (error && !isInitialized) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center p-4">
-        <div className="text-red-600 text-center">
-          <p className="text-lg font-bold mb-2">Ошибка загрузки</p>
-          <p className="text-sm mb-4">{error}</p>
-          <button 
-            onClick={handleLoadCards}
-            className="bg-black text-yellow-300 px-4 py-2 rounded-lg border-2 border-black hover:bg-gray-800 transition-colors"
-          >
-            Попробовать снова
-          </button>
-        </div>
+        <Card className="w-full max-w-sm">
+          <CardContent className="text-center py-8">
+            <Alert className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+            <Button onClick={handleLoadCards} variant="outline">
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Попробовать снова
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -97,8 +108,9 @@ export default function CardsPage() {
         </div>
 
         {isLoading && (
-          <div className="text-center py-4">
-            <div className="text-black text-sm">Обновление...</div>
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            <span className="text-sm">Обновление...</span>
           </div>
         )}
 
@@ -112,14 +124,16 @@ export default function CardsPage() {
             </p>
           </div>
         ) : (
-          filteredCards.map((card) => (
-            <CardItem 
-              key={card.id} 
-              card={card}
-              currentUser={currentUser}
-              onDelete={() => deleteCard(card.id)}
-            />
-          ))
+          <div className="space-y-4">
+            {filteredCards.map((card) => (
+              <CardItem 
+                key={card.id} 
+                card={card}
+                currentUser={currentUser}
+                onDelete={() => deleteCard(card.id)}
+              />
+            ))}
+          </div>
         )}
       </main>
     </div>
