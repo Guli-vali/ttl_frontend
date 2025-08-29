@@ -1,9 +1,13 @@
+'use client';
+
+
 export type Profile = {
   id: string;
   name: string;
   email: string;
   bio?: string;
-  avatarUrl?: string;
+  avatar?: string; // ID файла в PocketBase
+  avatarUrl?: string; // URL для отображения
   nativeLanguages?: string[];
   learningLanguages?: string[];
   age?: number;
@@ -19,6 +23,7 @@ export type RegisterData = {
   passwordConfirm: string;
   name: string;
   bio?: string;
+  avatar?: File; // Добавляем поддержку файла
   nativeLanguages?: string[];
   learningLanguages?: string[];
   age?: number;
@@ -27,4 +32,6 @@ export type RegisterData = {
   interests?: string[];
 };
 
-export type UpdateProfileData = Partial<Profile>;
+export type UpdateProfileData = Partial<Profile> & {
+  avatar?: File; // Добавляем поддержку файла
+};

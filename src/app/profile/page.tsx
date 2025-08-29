@@ -2,23 +2,76 @@
 'use client';
 
 import Image from 'next/image';
-import { LogOut, MapPin, Globe, Heart, Edit } from 'lucide-react';
+import { useState } from 'react';
+import { LogOut, MapPin, Globe, Heart, Edit, Save, X } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
+import { AvatarUpload } from '@/components/ui/AvatarUpload';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function ProfilePage() {
-  const { profile, logout, isLoading, error } = useProfileStore();
+  const { profile, logout, updateProfile, isLoading, error } = useProfileStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    name: profile?.name || '',
+    bio: profile?.bio || '',
+    age: profile?.age?.toString() || '',
+    country: profile?.country || '',
+    city: profile?.city || '',
+  });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleLogout = async () => {
     await logout();
   };
 
+  const handleSave = async () => {
+    if (!profile) return;
+
+    setIsUpdating(true);
+    try {
+      const updateData: any = {
+        name: editData.name,
+        bio: editData.bio,
+        country: editData.country,
+        city: editData.city,
+      };
+
+      if (editData.age) {
+        updateData.age = parseInt(editData.age);
+      }
+
+      if (avatarFile) {
+        updateData.avatar = avatarFile;
+      }
+
+      const success = await updateProfile(updateData);
+      if (success) {
+        setIsEditing(false);
+        setAvatarFile(null);
+      }
+    } catch (error) {
+      console.error('Ошибка обновления профиля:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditData({
+      name: profile?.name || '',
+      bio: profile?.bio || '',
+      age: profile?.age?.toString() || '',
+      country: profile?.country || '',
+      city: profile?.city || '',
+    });
+    setAvatarFile(null);
+    setIsEditing(false);
+  };
+
   // Показываем загрузку
   if (isLoading) {
-    return (
-      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
-        <div className="text-black text-xl font-bold">Загрузка профиля...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Загрузка профиля..." />;
   }
 
   // Показываем ошибку
@@ -35,11 +88,7 @@ export default function ProfilePage() {
 
   // Проверяем наличие профиля
   if (!profile) {
-    return (
-      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
-        <div className="text-black text-xl font-bold">Профиль не найден</div>
-      </div>
-    );
+    return <LoadingSpinner message="Профиль не найден" />;
   }
 
   return (
@@ -58,8 +107,36 @@ export default function ProfilePage() {
       <main className="flex-1 p-4 space-y-4 pb-20">
         {/* Основная информация */}
         <div className="bg-white rounded-lg p-6 shadow border-2 border-black">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-4">
+          {isEditing ? (
+            // В режиме редактирования - аватарка сверху по центру, поля под ней
+            <div className="mb-4">
+              <div className="flex justify-center mb-4">
+                <AvatarUpload
+                  currentAvatarUrl={profile.avatarUrl}
+                  onAvatarChange={setAvatarFile}
+                  size="lg"
+                />
+              </div>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={editData.name}
+                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  placeholder="Имя"
+                  className="w-full p-3 border border-gray-300 rounded text-lg font-bold"
+                />
+                <input
+                  type="number"
+                  value={editData.age}
+                  onChange={(e) => setEditData({ ...editData, age: e.target.value })}
+                  placeholder="Возраст"
+                  className="w-full p-3 border border-gray-300 rounded text-lg"
+                />
+              </div>
+            </div>
+          ) : (
+            // В обычном режиме - аватарка слева, информация справа
+            <div className="flex items-center gap-4 mb-4">
               {profile.avatarUrl ? (
                 <Image
                   src={profile.avatarUrl}
@@ -73,7 +150,8 @@ export default function ProfilePage() {
                   {profile.name[0]}
                 </div>
               )}
-              <div>
+              
+              <div className="flex-1">
                 <h2 className="text-xl font-bold text-black">{profile.name}</h2>
                 {profile.age && (
                   <p className="text-gray-600">{profile.age} лет</p>
@@ -84,13 +162,73 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Edit size={16} className="text-gray-500" />
-            </button>
+          )}
+
+          {/* Кнопки редактирования/сохранения */}
+          <div className="flex justify-end gap-2">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  disabled={isUpdating}
+                  className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors disabled:opacity-50"
+                  title="Сохранить"
+                >
+                  <Save size={16} />
+                </button>
+                <button
+                  onClick={handleCancel}
+                  disabled={isUpdating}
+                  className="p-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors disabled:opacity-50"
+                  title="Отменить"
+                >
+                  <X size={16} />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="p-2 bg-white rounded-full border-2 border-black hover:bg-gray-100 transition-colors"
+                title="Редактировать"
+              >
+                <Edit size={16} className="text-black" />
+              </button>
+            )}
           </div>
-          
-          {profile.bio && (
-            <p className="text-gray-700 mb-4">{profile.bio}</p>
+
+          {/* Био */}
+          {isEditing ? (
+            <textarea
+              value={editData.bio}
+              onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+              placeholder="Расскажите о себе..."
+              className="w-full p-3 border border-gray-300 rounded resize-none mt-4"
+              rows={3}
+            />
+          ) : (
+            profile.bio && (
+              <p className="text-gray-700 mb-4 mt-4">{profile.bio}</p>
+            )
+          )}
+
+          {/* Местоположение */}
+          {isEditing && (
+            <div className="space-y-2 mt-4">
+              <input
+                type="text"
+                value={editData.country}
+                onChange={(e) => setEditData({ ...editData, country: e.target.value })}
+                placeholder="Страна"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+              <input
+                type="text"
+                value={editData.city}
+                onChange={(e) => setEditData({ ...editData, city: e.target.value })}
+                placeholder="Город"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
           )}
         </div>
 

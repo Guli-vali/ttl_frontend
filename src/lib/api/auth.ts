@@ -7,6 +7,7 @@ export interface RegisterData {
   passwordConfirm: string;
   name: string;
   bio?: string;
+  avatar?: File;
   nativeLanguages?: string[];
   learningLanguages?: string[];
   age?: number;
@@ -19,7 +20,25 @@ export class AuthApi extends BaseApi {
   // Регистрация
   async register(data: RegisterData): Promise<UserRecord> {
     try {
-      return await this.pb.collection('users').create(data);
+      const formData = new FormData();
+      
+      // Добавляем все поля кроме файла
+      Object.entries(data).forEach(([key, value]) => {
+        if (key !== 'avatar') {
+          if (Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (value !== undefined) {
+            formData.append(key, String(value));
+          }
+        }
+      });
+
+      // Добавляем файл аватарки, если есть
+      if (data.avatar) {
+        formData.append('avatar', data.avatar);
+      }
+
+      return await this.pb.collection('users').create(formData);
     } catch (error) {
       this.handleError(error, 'register');
     }
@@ -54,9 +73,27 @@ export class AuthApi extends BaseApi {
   }
 
   // Обновить профиль
-  async updateProfile(id: string, data: Partial<UserRecord>): Promise<UserRecord> {
+  async updateProfile(id: string, data: Partial<UserRecord> & { avatar?: File }): Promise<UserRecord> {
     try {
-      return await this.pb.collection('users').update(id, data);
+      const formData = new FormData();
+      
+      // Добавляем все поля кроме файла
+      Object.entries(data).forEach(([key, value]) => {
+        if (key !== 'avatar') {
+          if (Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (value !== undefined) {
+            formData.append(key, String(value));
+          }
+        }
+      });
+
+      // Добавляем файл аватарки, если есть
+      if (data.avatar) {
+        formData.append('avatar', data.avatar);
+      }
+
+      return await this.pb.collection('users').update(id, formData);
     } catch (error) {
       this.handleError(error, 'updateProfile');
     }

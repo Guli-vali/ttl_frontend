@@ -1,10 +1,16 @@
 'use client';
 
 import { PlusCircle, User, Home } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function BottomNav() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Не показываем нижнее меню на странице авторизации
+  if (pathname === '/auth') {
+    return null;
+  }
 
   return (
     <nav 

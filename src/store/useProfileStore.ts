@@ -69,10 +69,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     try {
       const updatedUser = await authApi.updateProfile(profile.id, data);
       set({ 
-        profile: {
-          ...profile,
-          ...updatedUser,
-        },
+        profile: createProfileFromUser(updatedUser),
         isLoading: false 
       });
       return true;
