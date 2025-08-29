@@ -1,13 +1,16 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
-import AuthWrapper from "@/components/AuthWrapper";
+import BottomNav from "@/components/layout/BottomNav";
+import AuthWrapper from "@/components/auth/AuthWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
 const geistMono = Geist_Mono({
@@ -36,16 +39,10 @@ export const viewport = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en">
-      <head>
-        {/* Можно оставить для гарантии */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#FFDF20" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthWrapper>
           {children}

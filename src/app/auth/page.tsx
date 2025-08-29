@@ -3,26 +3,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff, Globe, Heart, User } from 'lucide-react';
+import { Eye, EyeOff, Globe, Heart, User, Camera } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
-
-const LANGUAGES = [
-  'Русский', 'English', 'Español', 'Français', 'Deutsch', 'Italiano',
-  '中文', '日本語', '한국어', 'العربية', 'Português', 'Nederlands',
-  'Svenska', 'Polski', 'Türkçe', 'हिन्दी'
-];
-
-const COUNTRIES = [
-  'Россия', 'США', 'Великобритания', 'Германия', 'Франция', 'Испания',
-  'Италия', 'Китай', 'Япония', 'Южная Корея', 'Бразилия', 'Канада',
-  'Австралия', 'Нидерланды', 'Швеция', 'Польша', 'Турция', 'Индия'
-];
-
-const INTERESTS = [
-  'Путешествия', 'Кино', 'Музыка', 'Спорт', 'Кулинария', 'Книги',
-  'Искусство', 'Технологии', 'Фотография', 'Игры', 'Мода', 'История',
-  'Наука', 'Природа', 'Танцы', 'Йога'
-];
+import { LANGUAGES, COUNTRIES, INTERESTS } from '@/constants';
+import { AvatarUpload } from '@/components/ui/AvatarUpload';
 
 export default function AuthPage() {
   const router = useRouter();
@@ -48,6 +32,7 @@ export default function AuthPage() {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {};
@@ -124,6 +109,8 @@ export default function AuthPage() {
       setStep(2);
     } else if (step === 2 && validateStep2()) {
       setStep(3);
+    } else if (step === 3) {
+      setStep(4);
     }
   };
 
@@ -140,6 +127,7 @@ export default function AuthPage() {
       country: formData.country,
       city: formData.city,
       interests: formData.interests,
+      avatar: avatarFile,
     });
 
     if (success) {
@@ -322,6 +310,60 @@ export default function AuthPage() {
     </div>
   );
 
+  const renderStep4 = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
+            <Camera className="text-yellow-300" size={32} />
+          </div>
+        </div>
+        <h3 className="text-lg font-bold mb-2">Добавьте аватарку</h3>
+        <p className="text-gray-600 text-sm mb-6">
+          Загрузите свою фотографию или пропустите этот шаг
+        </p>
+      </div>
+
+      <div className="flex justify-center">
+        <AvatarUpload
+          onAvatarChange={setAvatarFile}
+          size="lg"
+        />
+      </div>
+
+      <div className="text-center">
+        <button
+          onClick={() => setAvatarFile(null)}
+          className="text-gray-500 hover:text-black text-sm underline"
+        >
+          Пропустить этот шаг
+        </button>
+      </div>
+    </div>
+  );
+
+  const getStepTitle = () => {
+    if (isLogin) return 'Вход';
+    switch (step) {
+      case 1: return 'Регистрация';
+      case 2: return 'Языки';
+      case 3: return 'Интересы';
+      case 4: return 'Аватарка';
+      default: return 'Регистрация';
+    }
+  };
+
+  const getStepDescription = () => {
+    if (isLogin) return 'Добро пожаловать обратно!';
+    switch (step) {
+      case 1: return 'Создайте свой аккаунт';
+      case 2: return 'Выберите ваши языки';
+      case 3: return 'Расскажите о себе';
+      case 4: return 'Добавьте фото профиля';
+      default: return 'Присоединяйтесь к языковому сообществу';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-yellow-300 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl border-2 border-black p-6 w-full max-w-md shadow-lg">
@@ -334,10 +376,10 @@ export default function AuthPage() {
             </div>
           </div>
           <h1 className="text-2xl font-bold text-black">
-            {isLogin ? 'Вход' : step === 1 ? 'Регистрация' : step === 2 ? 'Языки' : 'Завершение'}
+            {getStepTitle()}
           </h1>
           <p className="text-gray-600 mt-2">
-            {isLogin ? 'Добро пожаловать обратно!' : 'Присоединяйтесь к языковому сообществу'}
+            {getStepDescription()}
           </p>
         </div>
 
@@ -345,14 +387,14 @@ export default function AuthPage() {
         {!isLogin && (
           <div className="flex justify-center mb-6">
             <div className="flex items-center space-x-2">
-              {[1, 2, 3].map((stepNumber) => (
+              {[1, 2, 3, 4].map((stepNumber) => (
                 <div key={stepNumber} className="flex items-center">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                     step >= stepNumber ? 'bg-black text-yellow-300' : 'bg-gray-200 text-gray-500'
                   }`}>
                     {stepNumber}
                   </div>
-                  {stepNumber < 3 && (
+                  {stepNumber < 4 && (
                     <div className={`w-8 h-1 ${step > stepNumber ? 'bg-black' : 'bg-gray-200'}`} />
                   )}
                 </div>
@@ -362,7 +404,10 @@ export default function AuthPage() {
         )}
 
         {/* Формы */}
-        {isLogin || step === 1 ? renderStep1() : step === 2 ? renderStep2() : renderStep3()}
+        {isLogin || step === 1 ? renderStep1() : 
+         step === 2 ? renderStep2() : 
+         step === 3 ? renderStep3() : 
+         renderStep4()}
 
         {/* Ошибка */}
         {error && (
@@ -381,7 +426,7 @@ export default function AuthPage() {
             >
               {isLoading ? 'Вход...' : 'Войти'}
             </button>
-          ) : step < 3 ? (
+          ) : step < 4 ? (
             <div className="flex gap-3">
               {step > 1 && (
                 <button
@@ -401,7 +446,7 @@ export default function AuthPage() {
           ) : (
             <div className="flex gap-3">
               <button
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
                 className="flex-1 bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors border-2 border-black"
               >
                 Назад
@@ -422,6 +467,7 @@ export default function AuthPage() {
                 setIsLogin(!isLogin);
                 setStep(1);
                 setErrors({});
+                setAvatarFile(null);
               }}
               className="text-black hover:underline"
             >

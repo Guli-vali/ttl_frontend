@@ -11,8 +11,8 @@ export interface UserRecord {
   id: string;
   email: string;
   name: string;
-  avatar?: string;
-  avatarUrl?: string;
+  avatar?: string; // ID файла
+  avatarUrl?: string; // URL (устаревшее поле)
   bio?: string;
   nativeLanguages?: string[];
   learningLanguages?: string[];
@@ -32,16 +32,16 @@ export interface CardRecord {
   title: string;
   text: string;
   language: string;
-  author: string; // ID пользователя
+  author: string;
   created: string;
-  // Нет поля updated в вашей коллекции
+  updated: string;
 }
 
 export interface MessageRecord {
   id: string;
   text: string;
-  card: string; // ID карточки
-  author: string; // ID пользователя
+  card: string;
+  author: string;
   created: string;
   updated: string;
 }

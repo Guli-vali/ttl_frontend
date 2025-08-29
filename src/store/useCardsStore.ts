@@ -1,95 +1,39 @@
 // src/store/useCardsStore.ts
 import { create } from 'zustand';
-import { cardsApi } from '@/lib/api';
+import { cardsApi } from '@/lib/api/cards';
 import { useProfileStore } from './useProfileStore';
-import type { Profile } from './useProfileStore';
+import { CardsStore } from '@/types/store';
+import { transformCardRecord } from '@/lib/utils/transformers';
+import { handleCardsError } from '@/lib/utils/errorHandlers';
+import { DEBOUNCE_TIME } from '@/constants/timing';
 
-export type Card = {
-  id: string;
-  title: string;
-  text: string;
-  language: string;
-  author: Profile;
-};
-
-type CardsState = {
-  cards: Card[];
-  isLoading: boolean;
-  error: string | null;
-  isInitialized: boolean;
-  lastLoadTime: number; // Добавляем время последней загрузки
-  
-  // Actions
-  loadCards: (force?: boolean) => Promise<void>;
-  createCard: (data: { title: string; text: string; language: string }) => Promise<boolean>;
-  updateCard: (id: string, data: Partial<Card>) => Promise<boolean>;
-  deleteCard: (id: string) => Promise<boolean>;
-  getCardById: (id: string) => Card | undefined;
-  getCardsByLanguage: (language: string) => Card[];
-  getAvailableLanguages: () => string[];
-  clearError: () => void;
-  reset: () => void;
-};
-
-export const useCardsStore = create<CardsState>((set, get) => ({
+// Store
+export const useCardsStore = create<CardsStore>((set, get) => ({
+  // Начальное состояние
   cards: [],
   isLoading: false,
   error: null,
   isInitialized: false,
   lastLoadTime: 0,
 
+  // Действия
   loadCards: async (force = false) => {
     const state = get();
     const now = Date.now();
     
-    // Предотвращаем повторные запросы, если не принудительная загрузка
-    if (state.isLoading && !force) {
-      return;
-    }
+    // Предотвращаем повторные запросы
+    if (state.isLoading && !force) return;
 
-    // Дебаунсинг: не загружаем чаще чем раз в 2 секунды
-    if (!force && state.isInitialized && (now - state.lastLoadTime) < 2000) {
+    // Дебаунсинг
+    if (!force && state.isInitialized && (now - state.lastLoadTime) < DEBOUNCE_TIME) {
       return;
     }
 
     set({ isLoading: true, error: null });
+    
     try {
       const cardRecords = await cardsApi.getAll();
-      
-      // Преобразуем записи в нужный формат
-      const cards: Card[] = cardRecords.map(record => ({
-        id: record.id,
-        title: record.title,
-        text: record.text,
-        language: record.language,
-        author: record.expand?.author ? {
-          id: record.expand.author.id,
-          name: record.expand.author.name,
-          email: record.expand.author.email,
-          bio: record.expand.author.bio,
-          avatarUrl: record.expand.author.avatarUrl,
-          nativeLanguages: record.expand.author.nativeLanguages || [],
-          learningLanguages: record.expand.author.learningLanguages || [],
-          age: record.expand.author.age,
-          country: record.expand.author.country,
-          city: record.expand.author.city,
-          interests: record.expand.author.interests || [],
-          isRegistered: record.expand.author.isRegistered,
-        } : {
-          id: '',
-          name: 'Неизвестный автор',
-          email: '',
-          bio: '',
-          avatarUrl: '',
-          nativeLanguages: [],
-          learningLanguages: [],
-          age: undefined,
-          country: '',
-          city: '',
-          interests: [],
-          isRegistered: false,
-        }
-      }));
+      const cards = cardRecords.map(transformCardRecord);
 
       set({ 
         cards, 
@@ -98,9 +42,9 @@ export const useCardsStore = create<CardsState>((set, get) => ({
         lastLoadTime: now 
       });
     } catch (error) {
-      console.error('Error loading cards:', error);
+      const errorMessage = handleCardsError(error, 'LOAD_CARDS');
       set({ 
-        error: error instanceof Error ? error.message : 'Ошибка загрузки карточек', 
+        error: errorMessage, 
         isLoading: false,
         isInitialized: true,
         lastLoadTime: now
@@ -109,76 +53,63 @@ export const useCardsStore = create<CardsState>((set, get) => ({
   },
 
   createCard: async (data) => {
+    const { profile } = useProfileStore.getState();
+    if (!profile) {
+      set({ error: 'Необходимо войти в систему' });
+      return false;
+    }
+
     set({ isLoading: true, error: null });
+    
     try {
-      const { profile } = useProfileStore.getState();
-      if (!profile) {
-        set({ error: 'Необходимо войти в систему', isLoading: false });
-        return false;
-      }
-
-      await cardsApi.create({
-        ...data,
-        author: profile.id,
-      });
-
-      // Принудительно перезагружаем карточки
+      await cardsApi.create(data);
       await get().loadCards(true);
       return true;
     } catch (error) {
-      console.error('Error creating card:', error);
-      set({ 
-        error: error instanceof Error ? error.message : 'Ошибка создания карточки', 
-        isLoading: false 
-      });
+      const errorMessage = handleCardsError(error, 'CREATE_CARD');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
-  updateCard: async (id: string, data) => {
+  updateCard: async (id, data) => {
     set({ isLoading: true, error: null });
+    
     try {
       await cardsApi.update(id, data);
       await get().loadCards(true);
       return true;
     } catch (error) {
-      console.error('Error updating card:', error);
-      set({ 
-        error: error instanceof Error ? error.message : 'Ошибка обновления карточки', 
-        isLoading: false 
-      });
+      const errorMessage = handleCardsError(error, 'UPDATE_CARD');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
-  deleteCard: async (id: string) => {
+  deleteCard: async (id) => {
     set({ isLoading: true, error: null });
+    
     try {
       await cardsApi.delete(id);
       await get().loadCards(true);
       return true;
     } catch (error) {
-      console.error('Error deleting card:', error);
-      set({ 
-        error: error instanceof Error ? error.message : 'Ошибка удаления карточки', 
-        isLoading: false 
-      });
+      const errorMessage = handleCardsError(error, 'DELETE_CARD');
+      set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
-  getCardById: (id: string) => {
+  getCardById: (id) => {
     return get().cards.find(card => card.id === id);
   },
 
-  getCardsByLanguage: (language: string) => {
-    const state = get();
-    return state.cards.filter((card) => card.language === language);
+  getCardsByLanguage: (language) => {
+    return get().cards.filter(card => card.language === language);
   },
 
   getAvailableLanguages: () => {
-    const state = get();
-    const languages = [...new Set(state.cards.map(card => card.language))];
+    const languages = [...new Set(get().cards.map(card => card.language))];
     return languages.sort();
   },
 

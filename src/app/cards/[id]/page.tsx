@@ -3,12 +3,12 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Send, User } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 import Image from 'next/image';
 import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useMessagesStore, initializeMessagesRealtime } from '@/store/useMessagesStore';
-import MessageItem from '@/components/MessageItem';
+import MessageItem from '@/components/messages/MessageItem';
 
 export default function CardPage() {
   const params = useParams();
