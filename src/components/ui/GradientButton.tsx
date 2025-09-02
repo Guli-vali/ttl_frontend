@@ -38,21 +38,21 @@ export const GradientButton = ({
 
   const variantClasses = {
     primary: `
-      bg-gradient-to-r from-purple-600 to-pink-600
-      hover:from-purple-700 hover:to-pink-700
-      text-white shadow-lg hover:shadow-xl
-      focus:ring-purple-500
+      bg-gradient-to-r from-yellow-500 to-yellow-600
+      hover:from-yellow-600 hover:to-yellow-700
+      text-black shadow-lg hover:shadow-xl
+      focus:ring-yellow-500
     `,
     secondary: `
-      bg-gradient-to-r from-blue-600 to-cyan-600
-      hover:from-blue-700 hover:to-cyan-700
+      bg-gradient-to-r from-gray-600 to-gray-700
+      hover:from-gray-700 hover:to-gray-800
       text-white shadow-lg hover:shadow-xl
-      focus:ring-blue-500
+      focus:ring-gray-500
     `,
     outline: `
-      bg-transparent border-2 border-purple-500
-      hover:bg-purple-500/10 text-purple-400
-      hover:text-purple-300 focus:ring-purple-500
+      bg-transparent border-2 border-yellow-500
+      hover:bg-yellow-500/10 text-yellow-400
+      hover:text-yellow-300 focus:ring-yellow-500
     `
   };
 

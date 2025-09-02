@@ -75,7 +75,7 @@ export const GradientCard = ({
   children, 
   className = "", 
   delay = 0,
-  gradient = "from-purple-500/20 to-pink-500/20"
+  gradient = "from-yellow-500/20 to-yellow-400/20"
 }: AnimatedCardProps & { gradient?: string }) => {
   return (
     <motion.div

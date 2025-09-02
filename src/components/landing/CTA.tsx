@@ -30,7 +30,7 @@ export const CTA = () => {
   return (
     <section className="py-20 px-4 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/30 to-black" />
       
       {/* Animated Background Elements */}
       <motion.div
@@ -43,7 +43,7 @@ export const CTA = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl"
       />
       
       <motion.div
@@ -56,7 +56,7 @@ export const CTA = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-yellow-400/10 rounded-full blur-3xl"
       />
 
       <div className="max-w-4xl mx-auto relative z-10 text-center">
@@ -69,10 +69,10 @@ export const CTA = () => {
           {/* Badge */}
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-sm text-white/80 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/30 rounded-full text-sm text-yellow-300 mb-8"
           >
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            Присоединяйтесь к сообществу
+            <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+            Ранний доступ - Бета-тестирование
           </motion.div>
 
           {/* Title */}
@@ -123,19 +123,19 @@ export const CTA = () => {
           >
             {[
               {
-                icon: "⚡",
-                title: "Быстрый старт",
-                description: "Регистрация за 30 секунд"
+                icon: "🚀",
+                title: "Ранний доступ",
+                description: "Будьте среди первых пользователей"
               },
               {
-                icon: "🔒",
-                title: "Безопасность",
-                description: "Ваши данные защищены"
+                icon: "🔧",
+                title: "Активная разработка",
+                description: "Ваши идеи влияют на развитие"
               },
               {
-                icon: "📱",
-                title: "PWA",
-                description: "Установите как приложение"
+                icon: "💬",
+                title: "Языковой обмен",
+                description: "Общайтесь на любом языке"
               }
             ].map((feature, index) => (
               <motion.div

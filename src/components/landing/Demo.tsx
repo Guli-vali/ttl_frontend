@@ -30,7 +30,7 @@ export const Demo = () => {
   return (
     <section id="demo" className="py-20 px-4 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black" />
       
       {/* Animated Background Elements */}
       <motion.div
@@ -43,7 +43,7 @@ export const Demo = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute top-20 right-20 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl"
+        className="absolute top-20 right-20 w-64 h-64 bg-yellow-500/5 rounded-full blur-3xl"
       />
       
       <motion.div
@@ -56,7 +56,7 @@ export const Demo = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute bottom-20 left-20 w-80 h-80 bg-pink-500/5 rounded-full blur-3xl"
+        className="absolute bottom-20 left-20 w-80 h-80 bg-yellow-400/5 rounded-full blur-3xl"
       />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -106,24 +106,24 @@ export const Demo = () => {
             {[
               {
                 icon: "💬",
-                title: "Живые чаты",
-                description: "Общайтесь в реальном времени с пользователями со всего мира"
+                title: "Чаты на интересующие вас темы",
+                description: "Общайтесь на волнующие темы, а не безжизненные абстракции"
               },
               {
                 icon: "🌍",
                 title: "Многоязычность",
-                description: "Поддержка более 50 языков для комфортного общения"
+                description: "Поддержка более многих языков для комфортного общения"
               },
               {
                 icon: "📱",
                 title: "PWA функциональность",
                 description: "Установите приложение на телефон и используйте как нативное"
               },
-              {
-                icon: "🔒",
-                title: "Безопасность",
-                description: "Ваши данные защищены, а общение остается приватным"
-              }
+            //   {
+            //     icon: "🔒",
+            //     title: "Безопасность",
+            //     description: "Ваши данные защищены, а общение остается приватным"
+            //   }
             ].map((feature, index) => (
               <motion.div
                 key={index}
@@ -133,16 +133,16 @@ export const Demo = () => {
                 viewport={{ once: true }}
                 className="flex items-start gap-4 group"
               >
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl shadow-lg"
-                >
-                  {feature.icon}
-                </motion.div>
+                                 <motion.div
+                   whileHover={{ scale: 1.1, rotate: 5 }}
+                   className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center text-2xl shadow-lg"
+                 >
+                   {feature.icon}
+                 </motion.div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
-                    {feature.title}
-                  </h3>
+                                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                     {feature.title}
+                   </h3>
                   <p className="text-gray-300 leading-relaxed">
                     {feature.description}
                   </p>
@@ -156,21 +156,21 @@ export const Demo = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl p-6 border border-white/10 backdrop-blur-sm"
+              className="bg-gradient-to-r from-yellow-500/20 to-yellow-400/20 rounded-2xl p-6 border border-white/10 backdrop-blur-sm"
             >
               <h4 className="text-lg font-semibold text-white mb-3">
                 Попробуйте прямо сейчас
               </h4>
               <p className="text-gray-300 text-sm mb-4">
-                Присоединяйтесь к тысячам пользователей и начните общение
+                Присоединяйтесь к раннему доступу и помогите нам создать лучшее приложение
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300">
-                  Начать общение
-                </button>
-                <button className="border border-purple-500 text-purple-400 px-6 py-3 rounded-xl font-medium hover:bg-purple-500/10 transition-all duration-300">
-                  Узнать больше
-                </button>
+                                 <button className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-6 py-3 rounded-xl font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300">
+                   Начать общение
+                 </button>
+                 <button className="border border-yellow-500 text-yellow-400 px-6 py-3 rounded-xl font-medium hover:bg-yellow-500/10 transition-all duration-300">
+                   Узнать больше
+                 </button>
               </div>
             </motion.div>
           </motion.div>
@@ -185,10 +185,10 @@ export const Demo = () => {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
         >
           {[
-            { number: "10K+", label: "Активных пользователей" },
+            { number: "Ранний", label: "доступ" },
             { number: "50+", label: "Поддерживаемых языков" },
-            { number: "100K+", label: "Отправленных сообщений" },
-            { number: "4.9", label: "Рейтинг в App Store" }
+            { number: "Бета", label: "тестирование" },
+            { number: "Скоро", label: "в App Store" }
           ].map((stat, index) => (
             <motion.div
               key={index}
@@ -198,9 +198,9 @@ export const Demo = () => {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
-                {stat.number}
-              </div>
+                             <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                 {stat.number}
+               </div>
               <div className="text-sm text-gray-400">
                 {stat.label}
               </div>

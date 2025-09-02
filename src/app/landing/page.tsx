@@ -43,13 +43,14 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-slate-900">
+    <main className="min-h-screen bg-black">
       <Navigation />
       <Hero />
+      <Demo />
       <About />
       <HowItWorks />
-      <Demo />
-      <Testimonials />
+      {/* <Demo /> */}
+      {/* <Testimonials /> */}
       <CTA />
       <Footer />
     </main>

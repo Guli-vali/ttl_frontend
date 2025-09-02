@@ -30,7 +30,7 @@ export const HowItWorks = () => {
   return (
     <section id="how-it-works" className="py-20 px-4 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-800 to-slate-900" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black" />
       
       {/* Animated Background */}
       <motion.div
@@ -43,7 +43,7 @@ export const HowItWorks = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-3xl"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-500/5 rounded-full blur-3xl"
       />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -86,7 +86,7 @@ export const HowItWorks = () => {
             >
               {/* Connection Line */}
               {index < LANDING_CONFIG.howItWorks.steps.length - 1 && (
-                <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-transparent z-0" />
+                <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-yellow-500 to-transparent z-0" />
               )}
               
               <AnimatedCard
@@ -99,7 +99,7 @@ export const HowItWorks = () => {
                   whileInView={{ scale: 1 }}
                   transition={{ delay: index * 0.2 + 0.3, type: "spring", stiffness: 200 }}
                   viewport={{ once: true }}
-                  className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl shadow-lg"
+                  className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 text-black font-bold text-xl shadow-lg"
                 >
                   {step.number}
                 </motion.div>
@@ -131,7 +131,7 @@ export const HowItWorks = () => {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
+          <div className="bg-gradient-to-r from-yellow-500/20 via-yellow-400/20 to-yellow-500/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
                 Готовы начать?
@@ -150,7 +150,7 @@ export const HowItWorks = () => {
                     transition={{ delay: step * 0.2 }}
                     className="flex items-center"
                   >
-                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black text-sm font-bold">
                       {step}
                     </div>
                     {step < 3 && (
@@ -158,7 +158,7 @@ export const HowItWorks = () => {
                         initial={{ width: 0 }}
                         animate={{ width: 40 }}
                         transition={{ delay: step * 0.2 + 0.3, duration: 0.5 }}
-                        className="h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 mx-2"
+                        className="h-0.5 bg-gradient-to-r from-yellow-500 to-yellow-400 mx-2"
                       />
                     )}
                   </motion.div>
@@ -169,7 +169,7 @@ export const HowItWorks = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 {[
                   { icon: "⚡", text: "Мгновенная регистрация" },
-                  { icon: "🔒", text: "Безопасное общение" },
+                //   { icon: "🔒", text: "Безопасное общение" },
                   { icon: "📱", text: "Работает везде" }
                 ].map((feature, index) => (
                   <motion.div

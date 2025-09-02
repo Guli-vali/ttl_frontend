@@ -80,7 +80,7 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
                 <h3 className="text-white font-semibold text-lg">
                   {slides[currentSlide].title}
                 </h3>
-                <div className="w-12 h-1 bg-purple-500 rounded-full mx-auto mt-2"></div>
+                <div className="w-12 h-1 bg-yellow-500 rounded-full mx-auto mt-2"></div>
               </div>
 
               {/* Content */}
@@ -98,7 +98,7 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
                         <p className="text-white font-medium text-sm">{item.text}</p>
                         <div className="flex items-center justify-between mt-2">
                           <span className="text-xs text-gray-300">{item.lang}</span>
-                          <span className="text-xs text-purple-400">{item.users} участников</span>
+                                                     <span className="text-xs text-yellow-400">{item.users} участников</span>
                         </div>
                       </div>
                     )}
@@ -131,9 +131,9 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
                       key={index}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-colors ${
-                        index === currentSlide ? 'bg-purple-500' : 'bg-transparent'
-                      }`}
+                                             className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-colors ${
+                         index === currentSlide ? 'bg-yellow-500' : 'bg-transparent'
+                       }`}
                       onClick={() => setCurrentSlide(index)}
                     >
                       {icon}
@@ -160,7 +160,7 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute -top-4 -right-4 w-8 h-8 bg-purple-500 rounded-full opacity-80"
+                 className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-500 rounded-full opacity-80"
       />
       
       <motion.div
@@ -174,7 +174,7 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
           ease: "easeInOut",
           delay: 1
         }}
-        className="absolute -bottom-4 -left-4 w-6 h-6 bg-pink-500 rounded-full opacity-80"
+                 className="absolute -bottom-4 -left-4 w-6 h-6 bg-yellow-400 rounded-full opacity-80"
       />
     </motion.div>
   );

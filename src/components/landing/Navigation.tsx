@@ -11,7 +11,7 @@ export const Navigation = () => {
     { name: 'О приложении', href: '#about' },
     { name: 'Как это работает', href: '#how-it-works' },
     { name: 'Демо', href: '#demo' },
-    { name: 'Отзывы', href: '#testimonials' }
+    // { name: 'Отзывы', href: '#testimonials' }
   ];
 
   const containerVariants = {
@@ -66,7 +66,11 @@ export const Navigation = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2"
           >
-            <span className="text-2xl">👽</span>
+            <img 
+              src="/icons/icon-192x192.png" 
+              alt="TalkToAliens" 
+              className="w-8 h-8 rounded-lg"
+            />
             <span className="text-xl font-bold text-white">TalkToAliens</span>
           </motion.div>
 
@@ -77,7 +81,7 @@ export const Navigation = () => {
                 key={index}
                 href={item.href}
                 whileHover={{ y: -2 }}
-                className="text-gray-300 hover:text-white transition-colors duration-300 text-sm font-medium"
+                className="text-gray-300 hover:text-yellow-400 transition-colors duration-300 text-sm font-medium"
               >
                 {item.name}
               </motion.a>

@@ -43,7 +43,7 @@ export const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
       
       {/* Animated Background Elements */}
       <motion.div
@@ -56,7 +56,7 @@ export const Hero = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl"
       />
       
       <motion.div
@@ -69,7 +69,7 @@ export const Hero = () => {
           repeat: Infinity,
           ease: "linear"
         }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-yellow-400/10 rounded-full blur-3xl"
       />
 
       {/* Content */}
@@ -93,7 +93,7 @@ export const Hero = () => {
           variants={titleVariants}
           className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
         >
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
             {LANDING_CONFIG.hero.title}
           </span>
         </motion.h1>
@@ -101,7 +101,7 @@ export const Hero = () => {
         {/* Subtitle */}
         <motion.h2
           variants={itemVariants}
-          className="text-xl md:text-2xl text-purple-200 mb-4 font-medium"
+          className="text-xl md:text-2xl text-yellow-200 mb-4 font-medium"
         >
           {LANDING_CONFIG.hero.subtitle}
         </motion.h2>
@@ -145,9 +145,9 @@ export const Hero = () => {
           className="flex justify-center items-center gap-8 mt-16 text-center"
         >
           {[
-            { number: "10K+", label: "Пользователей" },
+            { number: "Ранний", label: "доступ" },
             { number: "50+", label: "Языков" },
-            { number: "100K+", label: "Сообщений" }
+            { number: "Бета", label: "тестирование" }
           ].map((stat, index) => (
             <motion.div
               key={index}

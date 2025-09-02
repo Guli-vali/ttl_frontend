@@ -30,7 +30,7 @@ export const About = () => {
   return (
     <section id="about" className="py-20 px-4 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black to-gray-900" />
       
       {/* Floating Elements */}
       <motion.div
@@ -43,7 +43,7 @@ export const About = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-20 left-10 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl"
+        className="absolute top-20 left-10 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl"
       />
       
       <motion.div
@@ -57,7 +57,7 @@ export const About = () => {
           ease: "easeInOut",
           delay: 2
         }}
-        className="absolute bottom-20 right-10 w-40 h-40 bg-pink-500/5 rounded-full blur-2xl"
+        className="absolute bottom-20 right-10 w-40 h-40 bg-yellow-400/5 rounded-full blur-2xl"
       />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -89,7 +89,7 @@ export const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {LANDING_CONFIG.about.features.map((feature, index) => (
             <motion.div
@@ -131,8 +131,8 @@ export const About = () => {
                   description: "Интуитивно понятный интерфейс, который работает на всех устройствах"
                 },
                 {
-                  title: "Безопасность",
-                  description: "Ваши данные защищены, а общение остается приватным"
+                  title: "Веселье",
+                  description: "Благодаря интересным темам общение будет проходить легко и быстро"
                 },
                 {
                   title: "Мгновенная связь",
@@ -147,8 +147,8 @@ export const About = () => {
                   viewport={{ once: true }}
                   className="flex items-start gap-4"
                 >
-                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">
+                  <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-black text-sm font-bold">
                       {index + 1}
                     </span>
                   </div>
@@ -169,14 +169,14 @@ export const About = () => {
             variants={itemVariants}
             className="relative"
           >
-            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
+            <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-400/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
               <div className="text-center">
                 <div className="text-6xl mb-4">🌍</div>
                 <h4 className="text-xl font-semibold text-white mb-2">
                   Глобальное сообщество
                 </h4>
                 <p className="text-gray-300 text-sm mb-6">
-                  Присоединяйтесь к тысячам пользователей со всего мира
+                  Присоединяйтесь к раннему доступу и будьте среди первых пользователей
                 </p>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   {[
@@ -185,7 +185,7 @@ export const About = () => {
                     { number: "24/7", label: "Активность" }
                   ].map((stat, index) => (
                     <div key={index}>
-                      <div className="text-2xl font-bold text-purple-400">
+                      <div className="text-2xl font-bold text-yellow-400">
                         {stat.number}
                       </div>
                       <div className="text-xs text-gray-400">

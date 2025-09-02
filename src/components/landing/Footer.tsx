@@ -29,10 +29,10 @@ export const Footer = () => {
   return (
     <footer className="relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-slate-900" />
+      <div className="absolute inset-0 bg-black" />
       
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/95 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/95 to-transparent" />
 
       <div className="relative z-10">
         {/* Main Footer Content */}
@@ -127,11 +127,11 @@ export const Footer = () => {
                 <input
                   type="email"
                   placeholder="Ваш email"
-                  className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+                  className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all duration-300"
                 />
-                <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300">
-                  Подписаться
-                </button>
+                                 <button className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-xl font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300">
+                   Подписаться
+                 </button>
               </div>
             </div>
           </motion.div>
