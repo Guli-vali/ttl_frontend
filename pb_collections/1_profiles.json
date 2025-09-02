@@ -235,7 +235,28 @@
           "required": false,
           "system": false,
           "type": "bool"
-        }
+        },
+        {
+            "hidden": false,
+            "id": "text_role",
+            "max": 50,
+            "min": 0,
+            "name": "role",
+            "pattern": "^(guest|user|admin)$",
+            "presentable": false,
+            "required": false,
+            "system": false,
+            "type": "text"
+          },
+          {
+            "hidden": false,
+            "id": "date_expiresAt",
+            "name": "expiresAt",
+            "presentable": false,
+            "required": false,
+            "system": false,
+            "type": "date"
+          }
       ],
       "indexes": [
         "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
