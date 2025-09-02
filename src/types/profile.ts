@@ -1,5 +1,6 @@
 'use client';
 
+export type UserRole = 'user' | 'guest';
 
 export type Profile = {
   id: string;
@@ -15,6 +16,8 @@ export type Profile = {
   city?: string;
   interests?: string[];
   isRegistered?: boolean;
+  role?: UserRole; // Добавляем роль пользователя
+  expiresAt?: string; // Дата истечения для гостевых аккаунтов
 };
 
 export type RegisterData = {
@@ -34,4 +37,11 @@ export type RegisterData = {
 
 export type UpdateProfileData = Partial<Profile> & {
   avatar?: File; // Добавляем поддержку файла
+};
+
+export type GuestUpgradeData = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  name: string;
 };

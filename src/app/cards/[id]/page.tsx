@@ -3,12 +3,14 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useMessagesStore, initializeMessagesRealtime } from '@/store/useMessagesStore';
 import MessageItem from '@/components/messages/MessageItem';
+import GuestInfo from '@/components/auth/GuestInfo';
+import type { GuestUpgradeData } from '@/types/profile';
 
 export default function CardPage() {
   const params = useParams();
@@ -19,12 +21,13 @@ export default function CardPage() {
   const loadCards = useCardsStore((state) => state.loadCards);
   const isInitialized = useCardsStore((state) => state.isInitialized);
   const profile = useProfileStore((state) => state.profile);
+  const setProfile = useProfileStore((state) => state.setProfile);
   
   // Используем весь store и фильтруем сообщения локально
   const messagesStore = useMessagesStore();
   const messages = useMemo(() => messagesStore.messages[cardId] || [], [messagesStore.messages, cardId]);
   
-  const loadMessages = useMessagesStore((state) => state.loadMessages);
+  const loadMessages = useCardsStore((state) => state.loadMessages);
   const sendMessage = useMessagesStore((state) => state.sendMessage);
   const deleteMessage = useMessagesStore((state) => state.deleteMessage);
   const isLoading = useMessagesStore((state) => state.isLoading);
@@ -98,6 +101,10 @@ export default function CardPage() {
     await deleteMessage(messageId);
   }, [deleteMessage]);
 
+  const handleUserUpdate = useCallback((updatedUser: any) => {
+    setProfile(updatedUser);
+  }, [setProfile]);
+
   if (!isInitialized) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
@@ -114,25 +121,13 @@ export default function CardPage() {
     );
   }
 
-  if (!canParticipate) {
+  if (!profile) {
     return (
-      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
-        <header className="p-4 border-b border-black bg-white">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-black hover:text-gray-600 transition-colors"
-          >
-            <ArrowLeft size={24} />
-            <span className="font-medium">Назад</span>
-          </button>
-        </header>
-        
-        <main className="flex-1 p-4 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-black font-bold text-lg mb-2">Доступ запрещен</p>
-            <p className="text-gray-600">Вы не можете участвовать в этом чате</p>
-          </div>
-        </main>
+      <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
+        <div className="text-center">
+          <p className="text-black font-bold text-xl mb-4">Создание гостевого аккаунта...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto"></div>
+        </div>
       </div>
     );
   }
@@ -173,6 +168,9 @@ export default function CardPage() {
             </div>
           </div>
         </div>
+
+        {/* Показываем информацию о гостевом пользователе */}
+        <GuestInfo user={profile} onUserUpdate={handleUserUpdate} />
       </header>
 
       {/* Область сообщений */}
