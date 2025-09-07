@@ -1,5 +1,6 @@
 import PocketBase from 'pocketbase';
 import type { RecordService } from 'pocketbase';
+import type { UserRole } from '@/types/profile';
 
 // Создаем экземпляр PocketBase
 export const pb = new PocketBase(
@@ -23,6 +24,8 @@ export interface UserRecord {
   isRegistered?: boolean;
   verified?: boolean;
   emailVisibility?: boolean;
+  role?: UserRole; // Добавляем роль пользователя
+  expiresAt?: string; // Дата истечения для гостевых аккаунтов
   created: string;
   updated: string;
 }

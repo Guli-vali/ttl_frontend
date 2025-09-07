@@ -12,7 +12,6 @@ export class CardsApi extends BaseApi {
   // Получить все карточки с автором
   async getAll(): Promise<CardRecord[]> {
     try {
-      this.checkAuth();
 
       const records = await this.pb.collection('cards').getList(1, 50, {
         expand: 'author',

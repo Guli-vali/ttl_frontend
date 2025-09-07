@@ -4,7 +4,6 @@ export { cardsApi } from './cards';
 export { messagesApi } from './messages';
 
 // Экспорт типов
-export type { RegisterData } from './auth';
 export type { CreateCardData } from './cards';
 export type { CreateMessageData } from './messages';
 

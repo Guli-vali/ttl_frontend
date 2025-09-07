@@ -295,7 +295,7 @@ export default function ProfilePage() {
         )}
 
         {/* Статистика */}
-        <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
+        {/* <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
           <h3 className="font-bold text-lg mb-3">Активность</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
@@ -307,7 +307,7 @@ export default function ProfilePage() {
               <div className="text-sm text-gray-600">Сообщений отправлено</div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Настройки */}
         <div className="bg-white rounded-lg p-4 shadow border-2 border-black">

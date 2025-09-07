@@ -15,6 +15,7 @@ export type ProfileState = {
   logout: () => Promise<void>;
   updateProfile: (data: UpdateProfileData) => Promise<boolean>;
   checkAuth: () => Promise<void>;
+  createGuestAccountAndJoin: () => Promise<boolean>;
   clearError: () => void;
 };
 
