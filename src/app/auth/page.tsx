@@ -131,7 +131,10 @@ export default function AuthPage() {
     });
 
     if (success) {
-      router.push('/cards');
+      const success_login = await login(formData.email, formData.password);
+      if (success_login) {
+        router.push('/cards');
+      }
     }
   };
 

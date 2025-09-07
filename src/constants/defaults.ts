@@ -28,4 +28,5 @@ export const DEFAULT_ERROR_MESSAGES = {
   LOGOUT: 'Ошибка выхода',
   UPDATE_PROFILE: 'Ошибка обновления профиля',
   AUTH_REQUIRED: 'Необходимо войти в систему',
+  GUEST_LOGIN: 'Ошибка создания гостевого аккаунта',
 } as const;
