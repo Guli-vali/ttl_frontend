@@ -6,12 +6,12 @@ export async function POST(request: NextRequest) {
   try {
     const body: GuestUpgradeData = await request.json();
 
-    // Валидация данных
+    // Data validation
     if (!body.email || !body.password || !body.passwordConfirm || !body.name) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Все поля обязательны для заполнения'
+          message: 'All fields are required'
         },
         { status: 400 }
       );
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Пароли не совпадают'
+          message: 'Passwords do not match'
         },
         { status: 400 }
       );
@@ -31,19 +31,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Пароль должен содержать минимум 6 символов'
+          message: 'Password must contain at least 6 characters'
         },
         { status: 400 }
       );
     }
 
-    // Обновляем гостевой аккаунт
+    // Update guest account
     const updatedUser = await authApi.upgradeGuest(body);
 
     return NextResponse.json({
       success: true,
       user: updatedUser,
-      message: 'Аккаунт успешно обновлен'
+      message: 'Account updated successfully'
     });
   } catch (error) {
     console.error('Error upgrading guest account:', error);
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : 'Не удалось обновить аккаунт'
+        message: error instanceof Error ? error.message : 'Failed to update account'
       },
       { status: 500 }
     );

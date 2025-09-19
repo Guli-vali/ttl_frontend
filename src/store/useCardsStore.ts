@@ -9,22 +9,22 @@ import { DEBOUNCE_TIME } from '@/constants/timing';
 
 // Store
 export const useCardsStore = create<CardsStore>((set, get) => ({
-  // Начальное состояние
+  // Initial state
   cards: [],
   isLoading: false,
   error: null,
   isInitialized: false,
   lastLoadTime: 0,
 
-  // Действия
+  // Actions
   loadCards: async (force = false) => {
     const state = get();
     const now = Date.now();
     
-    // Предотвращаем повторные запросы
+    // Prevent duplicate requests
     if (state.isLoading && !force) return;
 
-    // Дебаунсинг
+    // Debouncing
     if (!force && state.isInitialized && (now - state.lastLoadTime) < DEBOUNCE_TIME) {
       return;
     }
@@ -55,7 +55,7 @@ export const useCardsStore = create<CardsStore>((set, get) => ({
   createCard: async (data) => {
     const { profile } = useProfileStore.getState();
     if (!profile) {
-      set({ error: 'Необходимо войти в систему' });
+      set({ error: 'Authentication required' });
       return false;
     }
 

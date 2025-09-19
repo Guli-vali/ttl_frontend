@@ -2,7 +2,7 @@ import { Profile } from '@/types/profile';
 
 export const DEFAULT_AUTHOR: Profile = {
   id: '',
-  name: 'Неизвестный автор',
+  name: 'Unknown Author',
   email: '',
   bio: '',
   avatarUrl: '',
@@ -16,17 +16,17 @@ export const DEFAULT_AUTHOR: Profile = {
 };
 
 export const DEFAULT_ERROR_MESSAGES = {
-  LOAD_CARDS: 'Ошибка загрузки карточек',
-  CREATE_CARD: 'Ошибка создания карточки',
-  UPDATE_CARD: 'Ошибка обновления карточки',
-  DELETE_CARD: 'Ошибка удаления карточки',
-  LOAD_MESSAGES: 'Ошибка загрузки сообщений',
-  SEND_MESSAGE: 'Ошибка отправки сообщения',
-  DELETE_MESSAGE: 'Ошибка удаления сообщения',
-  LOGIN: 'Ошибка входа',
-  REGISTER: 'Ошибка регистрации',
-  LOGOUT: 'Ошибка выхода',
-  UPDATE_PROFILE: 'Ошибка обновления профиля',
-  AUTH_REQUIRED: 'Необходимо войти в систему',
-  GUEST_LOGIN: 'Ошибка создания гостевого аккаунта',
+  LOAD_CARDS: 'Error loading cards',
+  CREATE_CARD: 'Error creating card',
+  UPDATE_CARD: 'Error updating card',
+  DELETE_CARD: 'Error deleting card',
+  LOAD_MESSAGES: 'Error loading messages',
+  SEND_MESSAGE: 'Error sending message',
+  DELETE_MESSAGE: 'Error deleting message',
+  LOGIN: 'Login error',
+  REGISTER: 'Registration error',
+  LOGOUT: 'Logout error',
+  UPDATE_PROFILE: 'Error updating profile',
+  AUTH_REQUIRED: 'Authentication required',
+  GUEST_LOGIN: 'Error creating guest account',
 } as const;

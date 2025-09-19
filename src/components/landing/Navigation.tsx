@@ -8,10 +8,10 @@ export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
-    { name: 'О приложении', href: '#about' },
-    { name: 'Как это работает', href: '#how-it-works' },
-    { name: 'Демо', href: '#demo' },
-    // { name: 'Отзывы', href: '#testimonials' }
+    { name: 'About', href: '#about' },
+    { name: 'How it works', href: '#how-it-works' },
+    { name: 'Demo', href: '#demo' },
+    // { name: 'Reviews', href: '#testimonials' }
   ];
 
   const containerVariants = {
@@ -95,13 +95,13 @@ export const Navigation = () => {
               size="sm"
               href="/auth"
             >
-              Войти
+              Sign In
             </GradientButton>
             <GradientButton
               size="sm"
               href="/auth"
             >
-              Начать
+              Get Started
             </GradientButton>
           </div>
 
@@ -155,14 +155,14 @@ export const Navigation = () => {
               href="/auth"
               className="w-full"
             >
-              Войти
+              Sign In
             </GradientButton>
             <GradientButton
               size="sm"
               href="/auth"
               className="w-full"
             >
-              Начать
+              Get Started
             </GradientButton>
           </div>
         </div>

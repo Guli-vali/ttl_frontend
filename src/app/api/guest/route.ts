@@ -3,13 +3,13 @@ import { authApi } from '@/lib/api/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    // Создаем гостевого пользователя
+    // Create guest user
     const guestUser = await authApi.guestLogin();
 
     return NextResponse.json({
       success: true,
       user: guestUser,
-      message: 'Гостевой аккаунт создан успешно'
+      message: 'Guest account created successfully'
     });
   } catch (error) {
     console.error('Error creating guest user:', error);
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : 'Не удалось создать гостевой аккаунт'
+        message: error instanceof Error ? error.message : 'Failed to create guest account'
       },
       { status: 500 }
     );

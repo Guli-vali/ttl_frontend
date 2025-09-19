@@ -3,12 +3,14 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Share2 } from 'lucide-react';
 import Image from 'next/image';
 import { useCardsStore } from '@/store/useCardsStore';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useMessagesStore, initializeMessagesRealtime } from '@/store/useMessagesStore';
 import MessageItem from '@/components/messages/MessageItem';
+import GuestAccountCreation from '@/components/ui/GuestAccountCreation';
+import Notification from '@/components/ui/Notification';
 
 export default function CardPage() {
   const params = useParams();
@@ -20,7 +22,7 @@ export default function CardPage() {
   const isInitialized = useCardsStore((state) => state.isInitialized);
   const profile = useProfileStore((state) => state.profile);
   
-  // Используем весь store и фильтруем сообщения локально
+  // Use entire store and filter messages locally
   const messagesStore = useMessagesStore();
   const messages = useMemo(() => messagesStore.messages[cardId] || [], [messagesStore.messages, cardId]);
   
@@ -34,14 +36,29 @@ export default function CardPage() {
   
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [showGuestCreation, setShowGuestCreation] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: 'success' | 'error' | 'info';
+  } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Проверяем, может ли пользователь участвовать в чате
+  // Check if user can participate in chat
   const canParticipate = useMemo(() => {
     return profile && card && (
-      profile.id === card.author.id || // Автор карточки
-      card.author.id !== profile.id // Не автор карточки (другой участник)
+      profile.id === card.author.id || // Card author
+      card.author.id !== profile.id // Not card author (other participant)
     );
+  }, [profile, card]);
+
+  // Check if user is authenticated
+  const isAuthenticated = useMemo(() => {
+    return !!profile;
+  }, [profile]);
+
+  // Check if user is the card owner
+  const isCardOwner = useMemo(() => {
+    return profile && card && profile.id === card.author.id;
   }, [profile, card]);
 
   const scrollToBottom = useCallback(() => {
@@ -52,21 +69,28 @@ export default function CardPage() {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  // Загружаем карточки, если они еще не загружены
+  // Load cards if not yet loaded
   useEffect(() => {
     if (!isInitialized) {
       loadCards();
     }
   }, [isInitialized, loadCards]);
 
-  // Загружаем сообщения для карточки
+  // Check authentication when card is loaded
+  useEffect(() => {
+    if (card && !isAuthenticated) {
+      setShowGuestCreation(true);
+    }
+  }, [card, isAuthenticated]);
+
+  // Load messages for card
   useEffect(() => {
     if (cardId && canParticipate) {
       loadMessages(cardId);
     }
   }, [cardId, canParticipate, loadMessages]);
 
-  // Инициализируем realtime подписку
+  // Initialize realtime subscription
   useEffect(() => {
     if (canParticipate) {
       try {
@@ -98,10 +122,43 @@ export default function CardPage() {
     await deleteMessage(messageId);
   }, [deleteMessage]);
 
+  const handleGuestCreationSuccess = useCallback(() => {
+    setShowGuestCreation(false);
+    // Page will automatically refresh with new user data
+  }, []);
+
+  const handleGuestCreationError = useCallback((error: string) => {
+    setShowGuestCreation(false);
+    setNotification({
+      message: error,
+      type: 'error'
+    });
+  }, []);
+
+  const handleCloseNotification = useCallback(() => {
+    setNotification(null);
+  }, []);
+
+  const handleShare = useCallback(async () => {
+    try {
+      const cardUrl = `${window.location.origin}/cards/${cardId}`;
+      await navigator.clipboard.writeText(cardUrl);
+      setNotification({
+        message: 'Link copied to clipboard',
+        type: 'success'
+      });
+    } catch {
+      setNotification({
+        message: 'Failed to copy link',
+        type: 'error'
+      });
+    }
+  }, [cardId]);
+
   if (!isInitialized) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
-        <p className="text-black font-bold text-xl">Загрузка...</p>
+        <p className="text-black font-bold text-xl">Loading...</p>
       </div>
     );
   }
@@ -109,12 +166,12 @@ export default function CardPage() {
   if (!card) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center">
-        <p className="text-black font-bold text-xl">Карточка не найдена</p>
+        <p className="text-black font-bold text-xl">Card not found</p>
       </div>
     );
   }
 
-  if (!canParticipate) {
+  if (!canParticipate && isAuthenticated) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
         <header className="p-4 border-b border-black bg-white">
@@ -123,14 +180,14 @@ export default function CardPage() {
             className="flex items-center gap-2 text-black hover:text-gray-600 transition-colors"
           >
             <ArrowLeft size={24} />
-            <span className="font-medium">Назад</span>
+            <span className="font-medium">Back</span>
           </button>
         </header>
         
         <main className="flex-1 p-4 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-black font-bold text-lg mb-2">Доступ запрещен</p>
-            <p className="text-gray-600">Вы не можете участвовать в этом чате</p>
+            <p className="text-black font-bold text-lg mb-2">Access denied</p>
+            <p className="text-gray-600">You cannot participate in this chat</p>
           </div>
         </main>
       </div>
@@ -139,7 +196,7 @@ export default function CardPage() {
 
   return (
     <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
-      {/* Заголовок */}
+      {/* Header */}
       <header className="p-4 border-b border-black bg-white">
         <div className="flex items-center gap-3">
           <button
@@ -155,27 +212,40 @@ export default function CardPage() {
           </div>
           
           <div className="flex items-center gap-2">
-            {card.author.avatarUrl ? (
-              <Image
-                src={card.author.avatarUrl}
-                alt={card.author.name}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full border border-black object-cover"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm border border-black">
-                {card.author.name[0]}
-              </div>
+            {/* Share button — only for card owner */}
+            {isCardOwner && (
+              <button
+                onClick={handleShare}
+                className="p-2 rounded-full border-2 border-black bg-yellow-300 hover:bg-yellow-200 transition-colors"
+                aria-label="Share"
+              >
+                <Share2 size={20} className="text-black" />
+              </button>
             )}
-            <div className="text-xs min-w-0">
-              <div className="font-medium text-black truncate max-w-[80px]">{card.author.name}</div>
+            
+            <div className="flex flex-col items-center gap-1">
+              {card.author.avatarUrl ? (
+                <Image
+                  src={card.author.avatarUrl}
+                  alt={card.author.name}
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 rounded-full border border-black object-cover"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm border border-black">
+                  {card.author.name[0]}
+                </div>
+              )}
+              <div className="text-xs text-center">
+                <div className="font-medium text-black truncate max-w-[80px]">{card.author.name}</div>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Область сообщений */}
+      {/* Messages area */}
       <main className="flex-1 overflow-y-auto p-4 pb-32">
         {error && (
           <div className="text-red-600 text-center mb-4 p-2 bg-red-100 rounded-lg">
@@ -185,11 +255,11 @@ export default function CardPage() {
 
         {isLoading && messages.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-600">Загрузка сообщений...</p>
+            <p className="text-gray-600">Loading messages...</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-600">Начните общение первым!</p>
+            <p className="text-gray-600">Start the conversation first!</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -206,14 +276,14 @@ export default function CardPage() {
         <div ref={messagesEndRef} />
       </main>
 
-      {/* Форма отправки сообщения - фиксированная внизу */}
+      {/* Message sending form - fixed at bottom */}
       <footer className="fixed bottom-16 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-black p-4 z-40">
         <form onSubmit={handleSendMessage} className="flex gap-2">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Введите сообщение..."
+            placeholder="Enter message..."
             className="flex-1 px-3 py-2 border-2 border-black rounded-lg focus:outline-none focus:border-yellow-500 bg-white"
             disabled={isSending}
           />
@@ -226,6 +296,23 @@ export default function CardPage() {
           </button>
         </form>
       </footer>
+
+      {/* Guest account creation modal */}
+      {showGuestCreation && (
+        <GuestAccountCreation
+          onSuccess={handleGuestCreationSuccess}
+          onError={handleGuestCreationError}
+        />
+      )}
+
+      {/* Notifications */}
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={handleCloseNotification}
+        />
+      )}
     </div>
   );
 }

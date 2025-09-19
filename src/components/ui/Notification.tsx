@@ -22,7 +22,7 @@ export default function Notification({
     if (duration > 0) {
       const timer = setTimeout(() => {
         setIsVisible(false);
-        setTimeout(() => onClose?.(), 300); // Ждем анимацию исчезновения
+        setTimeout(() => onClose?.(), 300); // Wait for fade animation
       }, duration);
 
       return () => clearTimeout(timer);

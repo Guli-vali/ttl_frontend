@@ -12,12 +12,12 @@ import { ClientResponseError } from 'pocketbase';
 
 
 export class AuthApi extends BaseApi {
-  // Регистрация
+  // Registration
   async register(data: RegisterData): Promise<UserRecord> {
     try {
       const formData = new FormData();
       
-      // Добавляем все поля кроме файла
+      // Add all fields except file
       Object.entries(data).forEach(([key, value]) => {
         if (key !== 'avatar') {
           if (Array.isArray(value)) {
@@ -28,7 +28,7 @@ export class AuthApi extends BaseApi {
         }
       });
 
-      // Добавляем файл аватарки, если есть
+      // Add avatar file if exists
       if (data.avatar) {
         formData.append('avatar', data.avatar);
       }
@@ -37,17 +37,17 @@ export class AuthApi extends BaseApi {
     } catch (error) {
       // Проверяем, не отменен ли запрос
       if (error instanceof ClientResponseError && error.status === 0) {
-        console.log('Запрос регистрации был отменен - это нормально при быстрой навигации');
-        // При autocancellation выбрасываем специальную ошибку
+        console.log('Registration request was cancelled - this is normal during fast navigation');
+        // For autocancellation throw special error
         throw new Error('REQUEST_CANCELLED');
       }
       
-      // Для других ошибок используем стандартную обработку
+      // For other errors use standard handling
       this.handleError(error, 'register');
     }
   }
 
-  // Вход
+  // Login
   async login(email: string, password: string): Promise<UserRecord> {
     try {
       const authData = await this.pb.collection('users').authWithPassword(email, password);
@@ -55,20 +55,20 @@ export class AuthApi extends BaseApi {
     } catch (error) {
       // Проверяем, не отменен ли запрос
       if (error instanceof ClientResponseError && error.status === 0) {
-        console.log('Запрос входа был отменен - это нормально при быстрой навигации');
-        // При autocancellation выбрасываем специальную ошибку
+        console.log('Login request was cancelled - this is normal during fast navigation');
+        // For autocancellation throw special error
         throw new Error('REQUEST_CANCELLED');
       }
       
-      // Для других ошибок используем стандартную обработку
+      // For other errors use standard handling
       this.handleError(error, 'login');
     }
   }
 
-  // Гостевой вход
+  // Guest login
   async guestRegister(): Promise<{ email: string; password: string }> {
     try {
-      // Создаем нового гостевого пользователя
+      // Create new guest user
       const guestUserRaw = prepareGuestUser();
       await this.register(guestUserRaw);
       const result = {
@@ -76,23 +76,23 @@ export class AuthApi extends BaseApi {
         password: guestUserRaw.password
       };
       
-      console.log('guestRegister: Успешно создан гостевой пользователь:', {
+      console.log('guestRegister: Successfully created guest user:', {
         email: result.email,
         name: guestUserRaw.name
       });
       
       return result;
     } catch (error) {
-      console.error('guestRegister: Ошибка при создании гостевого пользователя:', error);
+      console.error('guestRegister: Error creating guest user:', error);
       
       // Проверяем, не является ли это ошибкой autocancellation
       if (error instanceof Error && error.message === 'REQUEST_CANCELLED') {
-        console.log('guestRegister: Запрос был отменен, возвращаем пустые данные');
+        console.log('guestRegister: Request was cancelled, returning empty data');
         return { email: '', password: '' };
       }
       
       this.handleError(error, 'guestRegister');
-      // Возвращаем пустой объект чтобы избежать undefined
+      // Return empty object to avoid undefined
       return { email: '', password: '' };
     }
   }
@@ -146,12 +146,12 @@ export class AuthApi extends BaseApi {
   //   }
   // }
 
-  // Выход
+  // Logout
   async logout(): Promise<void> {
     this.pb.authStore.clear();
   }
 
-  // Получить текущего пользователя
+  // Get current user
   async getCurrentUser(): Promise<UserRecord | null> {
     if (!this.pb.authStore.isValid) {
       return null;
@@ -168,7 +168,7 @@ export class AuthApi extends BaseApi {
       // Проверяем, не отменен ли запрос
       if (error instanceof ClientResponseError && error.status === 0) {
         // Запрос был отменен - это нормально при быстрой навигации
-        console.log('Запрос получения пользователя был отменен');
+        console.log('Get user request was cancelled');
         return null;
       }
       
@@ -178,12 +178,12 @@ export class AuthApi extends BaseApi {
     }
   }
 
-  // Обновить профиль
+  // Update profile
   async updateProfile(id: string, data: Partial<UserRecord> & { avatar?: File }): Promise<UserRecord> {
     try {
       const formData = new FormData();
       
-      // Добавляем все поля кроме файла
+      // Add all fields except file
       Object.entries(data).forEach(([key, value]) => {
         if (key !== 'avatar') {
           if (Array.isArray(value)) {
@@ -194,7 +194,7 @@ export class AuthApi extends BaseApi {
         }
       });
 
-      // Добавляем файл аватарки, если есть
+      // Add avatar file if exists
       if (data.avatar) {
         formData.append('avatar', data.avatar);
       }
@@ -205,27 +205,27 @@ export class AuthApi extends BaseApi {
     }
   }
 
-  // Проверить валидность токена
+  // Check token validity
   isAuthenticated(): boolean {
     return this.pb.authStore.isValid;
   }
 
-  // Получить токен
+  // Get token
   getToken(): string | null {
     return this.pb.authStore.token;
   }
 
-  // Проверить, является ли текущий пользователь гостем
+  // Check if current user is guest
   async isCurrentUserGuest(): Promise<boolean> {
     try {
       const currentUser = await this.getCurrentUser();
       return isGuestUser(currentUser);
     } catch (error) {
-      // Если не удалось получить пользователя, считаем что это не гость
+      // If unable to get user, consider it not a guest
       return false;
     }
   }
 }
 
-// Экспорт экземпляра
+// Export instance
 export const authApi = new AuthApi();

@@ -16,7 +16,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
   loadMessages: async (cardId: string, force = false) => {
     const state = get();
     
-    // Если сообщения уже загружены и не требуется принудительная загрузка
+    // If messages already loaded and no force load required
     if (!force && state.messages[cardId] && state.messages[cardId].length > 0) {
       return;
     }
@@ -25,7 +25,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
     try {
       const messageRecords = await messagesApi.getByCard(cardId);
       
-      // Преобразуем записи в нужный формат
+      // Transform records to required format
       const messages = messageRecords.map(transformMessageRecord);
 
       set(state => ({
@@ -51,7 +51,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
     try {
       const { profile } = useProfileStore.getState();
       if (!profile) {
-        set({ error: 'Необходимо войти в систему', isLoading: false });
+        set({ error: 'Authentication required', isLoading: false });
         return false;
       }
 
@@ -61,7 +61,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
         author: profile.id,
       });
 
-      // Добавляем новое сообщение в store
+      // Add new message to store
       const newMessage = transformMessageRecord(messageRecord);
 
       set(state => ({
@@ -88,7 +88,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
     try {
       await messagesApi.delete(messageId);
       
-      // Удаляем сообщение из store
+      // Remove message from store
       set(state => {
         const newMessages = { ...state.messages };
         Object.keys(newMessages).forEach(cardId => {
@@ -130,32 +130,32 @@ export const useMessagesStore = create<MessagesState>((set, get) => ({
     });
   },
 
-  // Добавляем стабильный селектор
+  // Add stable selector
   getMessagesByCardId: (cardId: string) => {
     return get().messages[cardId] || [];
   },
 }));
 
-// Создаем хук для получения сообщений по cardId
+// Create hook for getting messages by cardId
 export const useMessagesByCardId = (cardId: string) => {
   return useMessagesStore((state) => state.getMessagesByCardId(cardId));
 };
 
-// Realtime подписка на сообщения
+// Realtime subscription to messages
 export const initializeMessagesRealtime = () => {
   try {
     const unsubscribe = pb.collection('messages').subscribe('*', (e) => {
       const state = useMessagesStore.getState();
       
       if (e.action === 'create') {
-        // Новое сообщение
+        // New message
         const messageRecord = e.record as MessageRecord;
         
-        // Загружаем полную информацию о сообщении с автором
+        // Load full message info with author
         messagesApi.getById(messageRecord.id).then(fullRecord => {
           const newMessage = transformMessageRecord(fullRecord);
 
-          // Добавляем сообщение только если его еще нет
+          // Add message only if not already present
           const currentMessages = state.messages[messageRecord.card] || [];
           if (!currentMessages.find(msg => msg.id === messageRecord.id)) {
             useMessagesStore.setState(state => ({
@@ -169,7 +169,7 @@ export const initializeMessagesRealtime = () => {
           console.error('Error loading message details:', error);
         });
       } else if (e.action === 'delete') {
-        // Удаленное сообщение
+        // Deleted message
         const messageRecord = e.record as MessageRecord;
         useMessagesStore.setState(state => {
           const newMessages = { ...state.messages };
@@ -181,15 +181,15 @@ export const initializeMessagesRealtime = () => {
       }
     });
 
-    // Проверяем, что unsubscribe действительно является функцией
+    // Check that unsubscribe is actually a function
     if (typeof unsubscribe !== 'function') {
       console.warn('PocketBase subscribe did not return a function');
-      return () => {}; // Возвращаем пустую функцию
+      return () => {}; // Return empty function
     }
 
     return unsubscribe;
   } catch (error) {
     console.error('Error setting up realtime subscription:', error);
-    return () => {}; // Возвращаем пустую функцию в случае ошибки
+    return () => {}; // Return empty function in case of error
   }
 };

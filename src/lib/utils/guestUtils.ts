@@ -6,11 +6,11 @@ import { RegisterData } from './profile';
 
 
 /**
- * Генерирует случайное имя пользователя для гостя
+ * Generates random username for guest
  */
 export function generateGuestUsername(): string {
-  const adjectives = ['Веселый', 'Умный', 'Дружелюбный', 'Креативный', 'Активный', 'Добрый', 'Интересный', 'Уникальный'];
-  const nouns = ['Гость', 'Путник', 'Странник', 'Исследователь', 'Путешественник', 'Новичок', 'Друг', 'Собеседник'];
+  const adjectives = ['Happy', 'Smart', 'Friendly', 'Creative', 'Active', 'Kind', 'Interesting', 'Unique'];
+  const nouns = ['Guest', 'Traveler', 'Explorer', 'Adventurer', 'Visitor', 'Newcomer', 'Friend', 'Chatter'];
   
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
@@ -20,7 +20,7 @@ export function generateGuestUsername(): string {
 }
 
 /**
- * Генерирует случайный пароль для гостя
+ * Generates random password for guest
  */
 export function generateGuestPassword(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -32,7 +32,7 @@ export function generateGuestPassword(): string {
 }
 
 /**
- * Генерирует случайный email для гостя
+ * Generates random email for guest
  */
 export function generateGuestEmail(): string {
   const timestamp = Date.now();
@@ -41,7 +41,7 @@ export function generateGuestEmail(): string {
 }
 
 /**
- * Вычисляет дату истечения для гостевого аккаунта (24 часа)
+ * Calculates expiration date for guest account (24 hours)
  */
 export function getGuestExpirationDate(): string {
   const expiresAt = new Date();

@@ -51,8 +51,8 @@ export const Footer = () => {
                   TalkToAliens
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-md">
-                  Прогрессивное веб-приложение для языкового обмена. 
-                  Общайтесь с людьми со всего мира на любом языке.
+                  Progressive web application for language exchange. 
+                  Practice languages through real conversations with people worldwide.
                 </p>
               </div>
               
@@ -75,7 +75,7 @@ export const Footer = () => {
 
             {/* Quick Links */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-white font-semibold mb-4">Приложение</h4>
+              <h4 className="text-white font-semibold mb-4">App</h4>
               <ul className="space-y-2">
                 {LANDING_CONFIG.footer.links.slice(0, 2).map((link, index) => (
                   <li key={index}>
@@ -92,7 +92,7 @@ export const Footer = () => {
 
             {/* Legal */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-white font-semibold mb-4">Правовая информация</h4>
+              <h4 className="text-white font-semibold mb-4">Legal</h4>
               <ul className="space-y-2">
                 {LANDING_CONFIG.footer.links.slice(2).map((link, index) => (
                   <li key={index}>
@@ -118,20 +118,20 @@ export const Footer = () => {
           >
             <div className="text-center">
               <h4 className="text-white font-semibold mb-2">
-                Оставайтесь в курсе
+                Stay updated
               </h4>
               <p className="text-gray-400 text-sm mb-4">
-                Получайте уведомления о новых функциях и обновлениях
+                Get notified about new features and updates
               </p>
               <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
                 <input
                   type="email"
-                  placeholder="Ваш email"
+                  placeholder="Your email"
                   className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all duration-300"
                 />
-                                 <button className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-xl font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300">
-                   Подписаться
-                 </button>
+                <button className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-xl font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300">
+                  Subscribe
+                </button>
               </div>
             </div>
           </motion.div>
@@ -148,10 +148,10 @@ export const Footer = () => {
           <div className="max-w-6xl mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-400 text-sm">
-                © 2024 TalkToAliens. Все права защищены.
+                © 2024 TalkToAliens. All rights reserved.
               </p>
               <div className="flex items-center gap-6 text-sm">
-                <span className="text-gray-400">Сделано с ❤️ для языкового обмена</span>
+                <span className="text-gray-400">Made with ❤️ for language exchange</span>
               </div>
             </div>
           </div>

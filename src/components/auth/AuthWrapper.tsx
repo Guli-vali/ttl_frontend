@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useRealtimeSubscription } from '@/hooks/useRealtimeSubscription';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { PUBLIC_ROUTES } from '@/constants/routes';
+import { isPublicRoute } from '@/constants/routes';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -28,9 +28,9 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
   // Логика навигации
   useEffect(() => {
     if (!isLoading) {
-      const isPublicRoute = PUBLIC_ROUTES.includes(pathname as any);
+      const isPublic = isPublicRoute(pathname);
       
-      if (!isAuthenticated && !isPublicRoute) {
+      if (!isAuthenticated && !isPublic) {
         router.push('/auth');
       } else if (isAuthenticated && pathname === '/auth') {
         router.push('/');
@@ -40,11 +40,11 @@ export default function AuthWrapper({ children }: AuthWrapperProps) {
 
   // Loading состояния
   if (isLoading) {
-    return <LoadingSpinner message="Загрузка..." />;
+    return <LoadingSpinner message="Loading..." />;
   }
 
-  if (!isAuthenticated && !PUBLIC_ROUTES.includes(pathname as any)) {
-    return <LoadingSpinner message="Перенаправление..." />;
+  if (!isAuthenticated && !isPublicRoute(pathname)) {
+    return <LoadingSpinner message="Redirecting..." />;
   }
 
   return <>{children}</>;

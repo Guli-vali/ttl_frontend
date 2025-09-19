@@ -1,71 +1,71 @@
 export const LANDING_CONFIG = {
   hero: {
     title: "TalkToAliens",
-    subtitle: "Общайтесь с людьми со всего мира на любом языке",
-    description: "Создавайте карточки с интересными темами для разговора и находите собеседников, готовых обсудить их на выбранном языке.",
-    ctaText: "Присоединиться к раннему доступу",
-    ctaSecondary: "Узнать больше"
+    subtitle: "Practice languages through real conversations",
+    description: "Create discussion topics you're passionate about and practice any language with native speakers who share your interests.",
+    ctaText: "Start Practicing",
+    ctaSecondary: "See How It Works"
   },
   
   about: {
-    title: "Что такое TalkToAliens?",
-    description: "Это прогрессивное веб-приложение для языкового обмена в стадии раннего доступа. Создавайте карточки с темами для разговора и находите собеседников со всего мира.",
+    title: "Why TalkToAliens?",
+    description: "Unlike traditional language apps, we focus on real conversations about topics that actually interest you. Practice languages the way you would on the streets of a foreign country.",
     features: [
-      "🌍 Многоязычное общение",
-      "💬 Интересные темы для разговора", 
-      "📱 Работает как нативное приложение",
-    //   "🔒 Безопасное общение"
+      "🎯 Practice with topics you care about",
+      "🌍 Connect with native speakers worldwide", 
+      "💬 Real conversations, not textbook phrases",
+      "📱 Works everywhere - no app store needed"
     ]
   },
   
   howItWorks: {
-    title: "Как это работает?",
+    title: "How it works",
     steps: [
       {
         number: "01",
-        title: "Создайте карточку",
-        description: "Придумайте интересную тему для разговора и создайте карточку с описанием",
-        icon: "📝"
+        title: "Create a topic",
+        description: "Share something you're passionate about - from cooking to space exploration",
+        icon: "💡"
       },
       {
         number: "02", 
-        title: "Выберите язык",
-        description: "Укажите язык, на котором хотите общаться, и найдите собеседников",
-        icon: "🌐"
+        title: "Find your match",
+        description: "Native speakers who share your interests will join your conversation",
+        icon: "🤝"
       },
       {
         number: "03",
-        title: "Начните чат",
-        description: "Присоединяйтесь к обсуждению и общайтесь с людьми со всего мира",
-        icon: "💬"
+        title: "Practice naturally",
+        description: "Chat like you would with friends - no pressure, just real conversation",
+        icon: "🗣️"
       }
     ]
   },
   
   testimonials: {
-    title: "Отзывы пользователей",
-    subtitle: "Отзывы бета-тестеров появятся здесь после запуска открытой версии",
-    placeholder: "Мы работаем над созданием лучшего опыта для языкового обмена. Скоро здесь появятся реальные отзывы наших пользователей."
+    title: "What users say",
+    subtitle: "Real feedback from our early users",
+    placeholder: "Join our growing community of language learners who are already practicing with native speakers."
   },
   
   demo: {
-    title: "Посмотрите, как это работает",
-    description: "Анимированная демонстрация интерфейса приложения"
+    title: "See it in action",
+    description: "Watch how easy it is to start practicing languages with real people"
   },
   
   cta: {
-    title: "Будьте среди первых пользователей",
-    description: "Присоединяйтесь к раннему доступу и помогите нам создать лучшее приложение для языкового обмена",
-    primaryText: "Присоединиться к бета-тестированию",
-    secondaryText: "Попробовать демо"
+    title: "Ready to start practicing?",
+    description: "Join thousands of language learners who are already having real conversations",
+    primaryText: "Start Now",
+    secondaryText: "Watch Demo"
   },
   
   footer: {
     links: [
-      { name: "О нас", href: "#" },
-      { name: "Политика конфиденциальности", href: "#" },
-      { name: "Условия использования", href: "#" },
-      { name: "Поддержка", href: "#" }
+      { name: "About Us", href: "#" },
+      { name: "Privacy Policy", href: "#" },
+      { name: "Terms of Service", href: "#" },
+      { name: "Support", href: "#" }
     ],
     social: [
       { name: "Telegram", href: "#", icon: "📱" },

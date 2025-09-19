@@ -51,7 +51,7 @@ export default function ProfilePage() {
         setAvatarFile(null);
       }
     } catch (error) {
-      console.error('Ошибка обновления профиля:', error);
+      console.error('Profile update error:', error);
     } finally {
       setIsUpdating(false);
     }
@@ -69,46 +69,46 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
-  // Показываем загрузку
+  // Show loading
   if (isLoading) {
-    return <LoadingSpinner message="Загрузка профиля..." />;
+    return <LoadingSpinner message="Loading profile..." />;
   }
 
-  // Показываем ошибку
+  // Show error
   if (error) {
     return (
       <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col items-center justify-center p-4">
         <div className="text-red-600 text-center">
-          <p className="text-lg font-bold mb-2">Ошибка загрузки профиля</p>
+          <p className="text-lg font-bold mb-2">Profile loading error</p>
           <p className="text-sm">{error}</p>
         </div>
       </div>
     );
   }
 
-  // Проверяем наличие профиля
+  // Check profile existence
   if (!profile) {
-    return <LoadingSpinner message="Профиль не найден" />;
+    return <LoadingSpinner message="Profile not found" />;
   }
 
   return (
     <div className="mx-auto max-w-md min-h-screen bg-yellow-300 shadow-lg flex flex-col">
       <header className="p-6 text-black text-left text-3xl font-bold flex items-center justify-between">
-        <span>Профиль</span>
+        <span>Profile</span>
         <button
           onClick={handleLogout}
           className="p-2 bg-white rounded-full border-2 border-black hover:bg-gray-100 transition-colors"
-          title="Выйти"
+          title="Logout"
         >
           <LogOut size={20} className="text-black" />
         </button>
       </header>
       
       <main className="flex-1 p-4 space-y-4 pb-20">
-        {/* Основная информация */}
+        {/* Main information */}
         <div className="bg-white rounded-lg p-6 shadow border-2 border-black">
           {isEditing ? (
-            // В режиме редактирования - аватарка сверху по центру, поля под ней
+            // In edit mode - avatar at top center, fields below
             <div className="mb-4">
               <div className="flex justify-center mb-4">
                 <AvatarUpload
@@ -122,20 +122,20 @@ export default function ProfilePage() {
                   type="text"
                   value={editData.name}
                   onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                  placeholder="Имя"
+                  placeholder="Name"
                   className="w-full p-3 border border-gray-300 rounded text-lg font-bold"
                 />
                 <input
                   type="number"
                   value={editData.age}
                   onChange={(e) => setEditData({ ...editData, age: e.target.value })}
-                  placeholder="Возраст"
+                  placeholder="Age"
                   className="w-full p-3 border border-gray-300 rounded text-lg"
                 />
               </div>
             </div>
           ) : (
-            // В обычном режиме - аватарка слева, информация справа
+            // In normal mode - avatar on left, info on right
             <div className="flex items-center gap-4 mb-4">
               {profile.avatarUrl ? (
                 <Image
@@ -154,7 +154,7 @@ export default function ProfilePage() {
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-black">{profile.name}</h2>
                 {profile.age && (
-                  <p className="text-gray-600">{profile.age} лет</p>
+                  <p className="text-gray-600">{profile.age} years old</p>
                 )}
                 <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
                   <MapPin size={14} />
@@ -164,7 +164,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Кнопки редактирования/сохранения */}
+          {/* Edit/save buttons */}
           <div className="flex justify-end gap-2">
             {isEditing ? (
               <>
@@ -172,7 +172,7 @@ export default function ProfilePage() {
                   onClick={handleSave}
                   disabled={isUpdating}
                   className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors disabled:opacity-50"
-                  title="Сохранить"
+                  title="Save"
                 >
                   <Save size={16} />
                 </button>
@@ -180,7 +180,7 @@ export default function ProfilePage() {
                   onClick={handleCancel}
                   disabled={isUpdating}
                   className="p-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors disabled:opacity-50"
-                  title="Отменить"
+                  title="Cancel"
                 >
                   <X size={16} />
                 </button>
@@ -189,19 +189,19 @@ export default function ProfilePage() {
               <button
                 onClick={() => setIsEditing(true)}
                 className="p-2 bg-white rounded-full border-2 border-black hover:bg-gray-100 transition-colors"
-                title="Редактировать"
+                title="Edit"
               >
                 <Edit size={16} className="text-black" />
               </button>
             )}
           </div>
 
-          {/* Био */}
+          {/* Bio */}
           {isEditing ? (
             <textarea
               value={editData.bio}
               onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-              placeholder="Расскажите о себе..."
+              placeholder="Tell us about yourself..."
               className="w-full p-3 border border-gray-300 rounded resize-none mt-4"
               rows={3}
             />
@@ -211,33 +211,33 @@ export default function ProfilePage() {
             )
           )}
 
-          {/* Местоположение */}
+          {/* Location */}
           {isEditing && (
             <div className="space-y-2 mt-4">
               <input
                 type="text"
                 value={editData.country}
                 onChange={(e) => setEditData({ ...editData, country: e.target.value })}
-                placeholder="Страна"
+                placeholder="Country"
                 className="w-full p-2 border border-gray-300 rounded"
               />
               <input
                 type="text"
                 value={editData.city}
                 onChange={(e) => setEditData({ ...editData, city: e.target.value })}
-                placeholder="Город"
+                placeholder="City"
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
           )}
         </div>
 
-        {/* Языки */}
+        {/* Languages */}
         <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
           <div className="mb-4">
             <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
               <Globe size={20} className="text-black" />
-              Владею языками
+              Native languages
             </h3>
             <div className="flex flex-wrap gap-2">
               {profile.nativeLanguages && profile.nativeLanguages.length > 0 ? (
@@ -250,7 +250,7 @@ export default function ProfilePage() {
                   </span>
                 ))
               ) : (
-                <p className="text-gray-500 text-sm">Не указаны</p>
+                <p className="text-gray-500 text-sm">Not specified</p>
               )}
             </div>
           </div>
@@ -258,7 +258,7 @@ export default function ProfilePage() {
           <div>
             <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
               <Heart size={20} className="text-black" />
-              Изучаю языки
+              Learning languages
             </h3>
             <div className="flex flex-wrap gap-2">
               {profile.learningLanguages && profile.learningLanguages.length > 0 ? (
@@ -271,16 +271,16 @@ export default function ProfilePage() {
                   </span>
                 ))
               ) : (
-                <p className="text-gray-500 text-sm">Не указаны</p>
+                <p className="text-gray-500 text-sm">Not specified</p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Интересы */}
+        {/* Interests */}
         {profile.interests && profile.interests.length > 0 && (
           <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
-            <h3 className="font-bold text-lg mb-3">Интересы</h3>
+            <h3 className="font-bold text-lg mb-3">Interests</h3>
             <div className="flex flex-wrap gap-2">
               {profile.interests.map((interest) => (
                 <span
@@ -294,7 +294,7 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* Статистика */}
+        {/* Statistics */}
         {/* <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
           <h3 className="font-bold text-lg mb-3">Активность</h3>
           <div className="grid grid-cols-2 gap-4">
@@ -309,27 +309,27 @@ export default function ProfilePage() {
           </div>
         </div> */}
 
-        {/* Настройки */}
+        {/* Settings
         <div className="bg-white rounded-lg p-4 shadow border-2 border-black">
-          <h3 className="font-bold text-lg mb-3">Настройки</h3>
+          <h3 className="font-bold text-lg mb-3">Settings</h3>
           <div className="space-y-3">
             <button className="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200">
-              Редактировать профиль
+              Edit profile
             </button>
             <button className="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200">
-              Настройки уведомлений
+              Notification settings
             </button>
             <button className="w-full text-left p-3 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200">
-              Конфиденциальность
+              Privacy
             </button>
             <button 
               onClick={handleLogout}
               className="w-full text-left p-3 hover:bg-red-50 rounded-lg transition-colors border border-red-200 text-red-600"
             >
-              Выйти из аккаунта
+              Logout
             </button>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );
