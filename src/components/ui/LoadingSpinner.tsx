@@ -6,7 +6,7 @@ interface LoadingSpinnerProps {
 }
 
 export function LoadingSpinner({ 
-  message = "Загрузка...", 
+  message = "Loading...", 
   className = "", 
   size = 'lg',
   variant = 'fullscreen'

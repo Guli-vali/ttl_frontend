@@ -39,7 +39,7 @@ export default function LanguageFilter({
         className="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-left font-medium hover:bg-gray-50 transition-colors flex items-center justify-between"
       >
         <span>
-          {selectedLanguage === 'all' ? 'Все языки' : selectedLanguage}
+          {selectedLanguage === 'all' ? 'All languages' : selectedLanguage}
         </span>
         <svg
           className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -59,7 +59,7 @@ export default function LanguageFilter({
               selectedLanguage === 'all' ? 'bg-yellow-200 font-medium' : ''
             }`}
           >
-            Все языки
+            All languages
           </button>
           {availableLanguages.map((language) => (
             <button

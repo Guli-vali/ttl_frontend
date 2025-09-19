@@ -16,7 +16,7 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
 
-  // Основная информация
+  // Main information
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,12 +37,12 @@ export default function AuthPage() {
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!isLogin && !formData.name.trim()) newErrors.name = 'Введите имя';
-    if (!formData.email.trim()) newErrors.email = 'Введите email';
-    if (!isLogin && !formData.password) newErrors.password = 'Введите пароль';
-    if (isLogin && !formData.password) newErrors.password = 'Введите пароль';
+    if (!isLogin && !formData.name.trim()) newErrors.name = 'Enter name';
+    if (!formData.email.trim()) newErrors.email = 'Enter email';
+    if (!isLogin && !formData.password) newErrors.password = 'Enter password';
+    if (isLogin && !formData.password) newErrors.password = 'Enter password';
     if (!isLogin && formData.password !== formData.passwordConfirm) {
-      newErrors.passwordConfirm = 'Пароли не совпадают';
+      newErrors.passwordConfirm = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -53,12 +53,12 @@ export default function AuthPage() {
     const newErrors: Record<string, string> = {};
 
     if (formData.nativeLanguages.length === 0) {
-      newErrors.nativeLanguages = 'Выберите хотя бы один родной язык';
+      newErrors.nativeLanguages = 'Select at least one native language';
     }
     if (formData.learningLanguages.length === 0) {
-      newErrors.learningLanguages = 'Выберите хотя бы один изучаемый язык';
+      newErrors.learningLanguages = 'Select at least one language to learn';
     }
-    if (!formData.country) newErrors.country = 'Выберите страну';
+    if (!formData.country) newErrors.country = 'Select country';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -144,7 +144,7 @@ export default function AuthPage() {
         <div>
           <input
             type="text"
-            placeholder="Имя"
+            placeholder="Name"
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
             className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
@@ -167,7 +167,7 @@ export default function AuthPage() {
       <div className="relative">
         <input
           type={showPassword ? 'text' : 'password'}
-          placeholder="Пароль"
+          placeholder="Password"
           value={formData.password}
           onChange={(e) => setFormData({...formData, password: e.target.value})}
           className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black pr-12"
@@ -187,7 +187,7 @@ export default function AuthPage() {
           <div>
             <input
               type="password"
-              placeholder="Подтвердите пароль"
+              placeholder="Confirm password"
               value={formData.passwordConfirm}
               onChange={(e) => setFormData({...formData, passwordConfirm: e.target.value})}
               className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
@@ -198,7 +198,7 @@ export default function AuthPage() {
           <div className="grid grid-cols-2 gap-3">
             <input
               type="number"
-              placeholder="Возраст (опционально)"
+              placeholder="Age (optional)"
               value={formData.age}
               onChange={(e) => setFormData({...formData, age: e.target.value})}
               className="border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
@@ -208,7 +208,7 @@ export default function AuthPage() {
               onChange={(e) => setFormData({...formData, country: e.target.value})}
               className="border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
             >
-              <option value="">Страна</option>
+              <option value="">Country</option>
               {COUNTRIES.map(country => (
                 <option key={country} value={country}>{country}</option>
               ))}
@@ -217,7 +217,7 @@ export default function AuthPage() {
 
           <input
             type="text"
-            placeholder="Город (опционально)"
+            placeholder="City (optional)"
             value={formData.city}
             onChange={(e) => setFormData({...formData, city: e.target.value})}
             className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
@@ -232,7 +232,7 @@ export default function AuthPage() {
       <div>
         <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
           <Globe className="text-black" size={20} />
-          На каких языках вы говорите?
+          What languages do you speak?
         </h3>
         <div className="flex flex-wrap gap-2">
           {LANGUAGES.map(language => (
@@ -255,7 +255,7 @@ export default function AuthPage() {
       <div>
         <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
           <Heart className="text-black" size={20} />
-          Какие языки изучаете?
+          What languages are you learning?
         </h3>
         <div className="flex flex-wrap gap-2">
           {LANGUAGES.map(language => (
@@ -282,7 +282,7 @@ export default function AuthPage() {
   const renderStep3 = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold mb-3">Ваши интересы</h3>
+        <h3 className="text-lg font-bold mb-3">Your interests</h3>
         <div className="flex flex-wrap gap-2">
           {INTERESTS.map(interest => (
             <button
@@ -301,9 +301,9 @@ export default function AuthPage() {
       </div>
 
       <div>
-        <h3 className="text-lg font-bold mb-3">Расскажите о себе</h3>
+        <h3 className="text-lg font-bold mb-3">Tell us about yourself</h3>
         <textarea
-          placeholder="Напишите немного о себе, ваших увлечениях и целях изучения языков..."
+          placeholder="Write a bit about yourself, your hobbies and language learning goals..."
           value={formData.bio}
           onChange={(e) => setFormData({...formData, bio: e.target.value})}
           className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
@@ -321,9 +321,9 @@ export default function AuthPage() {
             <Camera className="text-yellow-300" size={32} />
           </div>
         </div>
-        <h3 className="text-lg font-bold mb-2">Добавьте аватарку</h3>
+        <h3 className="text-lg font-bold mb-2">Add avatar</h3>
         <p className="text-gray-600 text-sm mb-6">
-          Загрузите свою фотографию или пропустите этот шаг
+          Upload your photo or skip this step
         </p>
       </div>
 
@@ -339,31 +339,31 @@ export default function AuthPage() {
           onClick={() => setAvatarFile(null)}
           className="text-gray-500 hover:text-black text-sm underline"
         >
-          Пропустить этот шаг
+          Skip this step
         </button>
       </div>
     </div>
   );
 
   const getStepTitle = () => {
-    if (isLogin) return 'Вход';
+    if (isLogin) return 'Login';
     switch (step) {
-      case 1: return 'Регистрация';
-      case 2: return 'Языки';
-      case 3: return 'Интересы';
-      case 4: return 'Аватарка';
-      default: return 'Регистрация';
+      case 1: return 'Registration';
+      case 2: return 'Languages';
+      case 3: return 'Interests';
+      case 4: return 'Avatar';
+      default: return 'Registration';
     }
   };
 
   const getStepDescription = () => {
-    if (isLogin) return 'Добро пожаловать обратно!';
+    if (isLogin) return 'Welcome back!';
     switch (step) {
-      case 1: return 'Создайте свой аккаунт';
-      case 2: return 'Выберите ваши языки';
-      case 3: return 'Расскажите о себе';
-      case 4: return 'Добавьте фото профиля';
-      default: return 'Присоединяйтесь к языковому сообществу';
+      case 1: return 'Create your account';
+      case 2: return 'Choose your languages';
+      case 3: return 'Tell us about yourself';
+      case 4: return 'Add profile photo';
+      default: return 'Join the language community';
     }
   };
 
@@ -371,7 +371,7 @@ export default function AuthPage() {
     <div className="min-h-screen bg-yellow-300 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl border-2 border-black p-6 w-full max-w-md shadow-lg">
         
-        {/* Заголовок */}
+        {/* Header */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
@@ -386,7 +386,7 @@ export default function AuthPage() {
           </p>
         </div>
 
-        {/* Прогресс регистрации */}
+        {/* Registration progress */}
         {!isLogin && (
           <div className="flex justify-center mb-6">
             <div className="flex items-center space-x-2">
@@ -406,20 +406,20 @@ export default function AuthPage() {
           </div>
         )}
 
-        {/* Формы */}
+        {/* Forms */}
         {isLogin || step === 1 ? renderStep1() : 
          step === 2 ? renderStep2() : 
          step === 3 ? renderStep3() : 
          renderStep4()}
 
-        {/* Ошибка */}
+        {/* Error */}
         {error && (
           <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
             {error}
           </div>
         )}
 
-        {/* Кнопки */}
+        {/* Buttons */}
         <div className="mt-6 space-y-3">
           {isLogin ? (
             <button
@@ -427,7 +427,7 @@ export default function AuthPage() {
               disabled={isLoading}
               className="w-full bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Вход...' : 'Войти'}
+              {isLoading ? 'Logging in...' : 'Login'}
             </button>
           ) : step < 4 ? (
             <div className="flex gap-3">
@@ -436,14 +436,14 @@ export default function AuthPage() {
                   onClick={() => setStep(step - 1)}
                   className="flex-1 bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors border-2 border-black"
                 >
-                  Назад
+                  Back
                 </button>
               )}
               <button
                 onClick={handleNextStep}
                 className="flex-1 bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black"
               >
-                Далее
+                Next
               </button>
             </div>
           ) : (
@@ -459,7 +459,7 @@ export default function AuthPage() {
                 disabled={isLoading}
                 className="flex-1 bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Регистрация...' : 'Готово'}
+                {isLoading ? 'Registering...' : 'Done'}
               </button>
             </div>
           )}
@@ -474,7 +474,7 @@ export default function AuthPage() {
               }}
               className="text-black hover:underline"
             >
-              {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
+              {isLogin ? 'No account? Register' : 'Already have an account? Login'}
             </button>
           </div>
         </div>

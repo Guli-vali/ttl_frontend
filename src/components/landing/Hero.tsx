@@ -85,7 +85,7 @@ export const Hero = () => {
           className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-sm text-white/80 mb-8"
         >
           <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          Новое PWA приложение для языкового обмена
+          Language exchange through real conversations
         </motion.div>
 
         {/* Title */}
@@ -145,9 +145,9 @@ export const Hero = () => {
           className="flex justify-center items-center gap-8 mt-16 text-center"
         >
           {[
-            { number: "Ранний", label: "доступ" },
-            { number: "50+", label: "Языков" },
-            { number: "Бета", label: "тестирование" }
+            { number: "50+", label: "Languages" },
+            { number: "Real", label: "Conversations" },
+            { number: "Free", label: "To Use" }
           ].map((stat, index) => (
             <motion.div
               key={index}

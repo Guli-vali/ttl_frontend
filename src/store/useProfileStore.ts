@@ -98,7 +98,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         });
       }
     } catch {
-      // При ошибке проверки аутентификации просто сбрасываем состояние
+      // On authentication check error just reset state
       set({ 
         profile: null, 
         isAuthenticated: false, 
@@ -115,16 +115,16 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
     
     while (retryCount < maxRetries) {
       try {
-        console.log(`Попытка ${retryCount + 1} из ${maxRetries}: Создаем гостевой аккаунт...`);
+        console.log(`Attempt ${retryCount + 1} of ${maxRetries}: Creating guest account...`);
         
-        // Создаем гостевой аккаунт
+        // Create guest account
         const registerSuccess = await authApi.guestRegister();
         
         if (registerSuccess && registerSuccess.email && registerSuccess.password) {
-          // Добавляем небольшую задержку чтобы избежать ошибок autocancellation
+          // Add small delay to avoid autocancellation errors
           await new Promise(resolve => setTimeout(resolve, 1000));
           
-          // Авторизуемся под созданным аккаунтом
+          // Login with created account
           const user = await authApi.login(registerSuccess.email, registerSuccess.password);
           
           set({ 
@@ -135,9 +135,9 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
           return true;
         }
         
-        // Если получили пустые данные, это означает autocancellation
-        // Продолжаем цикл для повторной попытки
-        console.log('Получены пустые данные от guestRegister, повторяем попытку...');
+        // If we got empty data, this means autocancellation
+        // Continue loop for retry
+        console.log('Got empty data from guestRegister, retrying...');
         retryCount++;
         continue;
               } catch (error) {
@@ -149,12 +149,12 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
             return false;
           }
           
-          // Ждем перед повторной попыткой
+          // Wait before retry
           await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
         }
     }
 
-    console.log('createGuestAccountAndJoin: ВЫХОД ИЗ ЦИКЛА - возвращаем false');
+    console.log('createGuestAccountAndJoin: EXITING LOOP - returning false');
     return false;
   },
 

@@ -22,7 +22,7 @@ export const CTA = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: [0.25, 0.1, 0.25, 1]
       }
     }
   };
@@ -72,7 +72,7 @@ export const CTA = () => {
             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 backdrop-blur-sm border border-yellow-500/30 rounded-full text-sm text-yellow-300 mb-8"
           >
             <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-            Ранний доступ - Бета-тестирование
+            Free to use - No subscription required
           </motion.div>
 
           {/* Title */}
@@ -123,19 +123,19 @@ export const CTA = () => {
           >
             {[
               {
-                icon: "🚀",
-                title: "Ранний доступ",
-                description: "Будьте среди первых пользователей"
+                icon: "🎯",
+                title: "Topics you love",
+                description: "Practice with subjects that actually interest you"
               },
               {
-                icon: "🔧",
-                title: "Активная разработка",
-                description: "Ваши идеи влияют на развитие"
+                icon: "🌍",
+                title: "Global community",
+                description: "Connect with native speakers worldwide"
               },
               {
                 icon: "💬",
-                title: "Языковой обмен",
-                description: "Общайтесь на любом языке"
+                title: "Real conversations",
+                description: "Chat naturally, not like a textbook"
               }
             ].map((feature, index) => (
               <motion.div

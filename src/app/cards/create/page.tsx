@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useCardsStore } from '@/store/useCardsStore';
 
 const LANGUAGES = [
-  'Русский', 'English', 'Español', 'Français', 'Deutsch', 'Italiano',
+  'Russian', 'English', 'Español', 'Français', 'Deutsch', 'Italiano',
   '中文', '日本語', '한국어', 'العربية', 'Português', 'Nederlands',
   'Svenska', 'Polski', 'Türkçe', 'हिन्दी'
 ];
@@ -27,9 +27,9 @@ export default function CreateCardPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = 'Введите заголовок';
-    if (!formData.text.trim()) newErrors.text = 'Введите текст';
-    if (!formData.language) newErrors.language = 'Выберите язык';
+    if (!formData.title.trim()) newErrors.title = 'Enter title';
+    if (!formData.text.trim()) newErrors.text = 'Enter text';
+    if (!formData.language) newErrors.language = 'Select language';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -53,7 +53,7 @@ export default function CreateCardPage() {
         >
           <ArrowLeft size={24} className="text-black" />
         </button>
-        <span>Создать карточку</span>
+        <span>Create Card</span>
       </header>
       
       <main className="flex-1 p-4 space-y-4 pb-20">
@@ -61,42 +61,42 @@ export default function CreateCardPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Заголовок
+                Title
               </label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Введите заголовок карточки"
+                placeholder="Enter card title"
               />
               {errors.title && <p className="text-red-600 text-sm mt-1">{errors.title}</p>}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Текст
+                Text
               </label>
               <textarea
                 value={formData.text}
                 onChange={(e) => setFormData({...formData, text: e.target.value})}
                 className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
                 rows={4}
-                placeholder="Введите текст карточки"
+                placeholder="Enter card text"
               />
               {errors.text && <p className="text-red-600 text-sm mt-1">{errors.text}</p>}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Язык
+                Language
               </label>
               <select
                 value={formData.language}
                 onChange={(e) => setFormData({...formData, language: e.target.value})}
                 className="w-full border-2 border-black rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-black"
               >
-                <option value="">Выберите язык</option>
+                <option value="">Select language</option>
                 {LANGUAGES.map(language => (
                   <option key={language} value={language}>{language}</option>
                 ))}
@@ -105,7 +105,7 @@ export default function CreateCardPage() {
             </div>
           </div>
 
-          {/* Ошибка */}
+          {/* Error */}
           {error && (
             <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {error}
@@ -118,7 +118,7 @@ export default function CreateCardPage() {
               disabled={isLoading}
               className="w-full bg-black text-yellow-300 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Создание...' : 'Создать карточку'}
+              {isLoading ? 'Creating...' : 'Create Card'}
             </button>
           </div>
         </div>

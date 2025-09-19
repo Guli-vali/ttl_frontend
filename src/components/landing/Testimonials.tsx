@@ -103,7 +103,7 @@ export const Testimonials = () => {
 
               {/* Content */}
               <h3 className="text-2xl font-bold text-white mb-4">
-                Отзывы бета-тестеров появятся здесь
+                Beta tester reviews coming soon
               </h3>
               
               <p className="text-gray-300 mb-8 leading-relaxed text-lg max-w-2xl mx-auto">
@@ -117,7 +117,7 @@ export const Testimonials = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-yellow-500/20 border border-yellow-500/30 rounded-full text-yellow-300 hover:bg-yellow-500/30 transition-colors duration-300"
               >
                 <span>🚀</span>
-                <span>Будьте первыми</span>
+                <span>Be the first</span>
               </motion.div>
             </AnimatedCard>
           </motion.div>
@@ -134,18 +134,18 @@ export const Testimonials = () => {
           <div className="bg-gradient-to-r from-yellow-500/10 via-yellow-400/10 to-yellow-500/10 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Ранний доступ
+                Early Access
               </h3>
               <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                Мы находимся в стадии активной разработки и приглашаем первых пользователей присоединиться к бета-тестированию
+                We're in active development and inviting early users to join our beta testing program
               </p>
               
               {/* Features */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { icon: "🔧", label: "Активная разработка" },
-                  { icon: "👥", label: "Первые пользователи" },
-                  { icon: "💡", label: "Ваши идеи важны" }
+                  { icon: "🔧", label: "Active development" },
+                  { icon: "👥", label: "Early users" },
+                  { icon: "💡", label: "Your ideas matter" }
                 ].map((feature, index) => (
                   <motion.div
                     key={index}

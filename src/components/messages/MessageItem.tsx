@@ -14,7 +14,7 @@ export default function MessageItem({ message, onDelete }: MessageItemProps) {
 
   return (
     <div className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>
-      {/* Аватар */}
+      {/* Avatar */}
       {message.author.avatarUrl ? (
         <Image
           src={message.author.avatarUrl}
@@ -29,7 +29,7 @@ export default function MessageItem({ message, onDelete }: MessageItemProps) {
         </div>
       )}
       
-      {/* Сообщение */}
+      {/* Message */}
       <div className={`max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'} flex flex-col`}>
         <div className="flex items-center gap-2 mb-1">
           <span className="text-xs text-gray-600 font-medium">
@@ -39,7 +39,7 @@ export default function MessageItem({ message, onDelete }: MessageItemProps) {
             <button
               onClick={onDelete}
               className="p-1 hover:bg-red-100 rounded transition-colors"
-              aria-label="Удалить сообщение"
+              aria-label="Delete message"
             >
               <Trash2 size={12} className="text-red-500" />
             </button>
@@ -57,7 +57,7 @@ export default function MessageItem({ message, onDelete }: MessageItemProps) {
         </div>
         
         <span className="text-xs text-gray-500 mt-1">
-          {new Date(message.created).toLocaleTimeString('ru-RU', {
+          {new Date(message.created).toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit'
           })}

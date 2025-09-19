@@ -9,21 +9,21 @@ import { CTA } from '@/components/landing/CTA';
 import { Footer } from '@/components/landing/Footer';
 
 export const metadata: Metadata = {
-  title: 'TalkToAliens - Общайтесь с людьми со всего мира на любом языке',
-  description: 'Прогрессивное веб-приложение для языкового обмена. Создавайте карточки с темами для разговора и находите собеседников на выбранном языке.',
-  keywords: 'языковой обмен, общение, PWA, многоязычность, чат, иностранные языки',
+  title: 'TalkToAliens - Communicate with people from around the world in any language',
+  description: 'Progressive web application for language exchange. Create cards with conversation topics and find conversation partners in your chosen language.',
+  keywords: 'language exchange, communication, PWA, multilingual, chat, foreign languages',
   authors: [{ name: 'TalkToAliens Team' }],
   openGraph: {
-    title: 'TalkToAliens - Общайтесь с людьми со всего мира',
-    description: 'Прогрессивное веб-приложение для языкового обмена',
+    title: 'TalkToAliens - Communicate with people from around the world',
+    description: 'Progressive web application for language exchange',
     type: 'website',
-    locale: 'ru_RU',
+    locale: 'en_US',
     siteName: 'TalkToAliens',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TalkToAliens - Общайтесь с людьми со всего мира',
-    description: 'Прогрессивное веб-приложение для языкового обмена',
+    title: 'TalkToAliens - Communicate with people from around the world',
+    description: 'Progressive web application for language exchange',
   },
   robots: {
     index: true,

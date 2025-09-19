@@ -66,7 +66,7 @@ export const HowItWorks = () => {
             variants={itemVariants}
             className="text-xl text-gray-300 max-w-2xl mx-auto"
           >
-            Всего три простых шага до начала общения с людьми со всего мира
+            Three simple steps to start practicing languages with real people
           </motion.p>
         </motion.div>
 
@@ -123,7 +123,7 @@ export const HowItWorks = () => {
           ))}
         </motion.div>
 
-        {/* Visual Flow */}
+        {/* Example Topics */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -134,54 +134,28 @@ export const HowItWorks = () => {
           <div className="bg-gradient-to-r from-yellow-500/20 via-yellow-400/20 to-yellow-500/20 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Готовы начать?
+                Popular conversation topics
               </h3>
               <p className="text-gray-300 mb-6 max-w-md mx-auto">
-                Присоединяйтесь к нашему сообществу и начните общение уже сегодня
+                See what people are talking about right now
               </p>
               
-              {/* Progress Indicator */}
-              <div className="flex justify-center items-center gap-4 mb-6">
-                {[1, 2, 3].map((step) => (
-                  <motion.div
-                    key={step}
-                    initial={{ scale: 0.8, opacity: 0.5 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: step * 0.2 }}
-                    className="flex items-center"
-                  >
-                    <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black text-sm font-bold">
-                      {step}
-                    </div>
-                    {step < 3 && (
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: 40 }}
-                        transition={{ delay: step * 0.2 + 0.3, duration: 0.5 }}
-                        className="h-0.5 bg-gradient-to-r from-yellow-500 to-yellow-400 mx-2"
-                      />
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Features Highlight */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 {[
-                  { icon: "⚡", text: "Мгновенная регистрация" },
-                //   { icon: "🔒", text: "Безопасное общение" },
-                  { icon: "📱", text: "Работает везде" }
-                ].map((feature, index) => (
+                  { icon: "🍳", text: "Cooking & Recipes" },
+                  { icon: "🚀", text: "Space & Technology" },
+                  { icon: "🎵", text: "Music & Culture" }
+                ].map((topic, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-center gap-2 text-gray-300"
+                    className="flex items-center gap-2 text-gray-300 bg-white/5 rounded-lg p-3"
                   >
-                    <span className="text-lg">{feature.icon}</span>
-                    <span>{feature.text}</span>
+                    <span className="text-lg">{topic.icon}</span>
+                    <span>{topic.text}</span>
                   </motion.div>
                 ))}
               </div>

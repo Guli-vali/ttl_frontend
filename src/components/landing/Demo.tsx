@@ -95,84 +95,72 @@ export const Demo = () => {
             <PhoneMockup />
           </motion.div>
 
-          {/* Features List */}
+          {/* Demo Steps */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-6"
           >
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-white mb-4">
+                How it works in practice
+              </h3>
+              <p className="text-gray-300">
+                See the conversation flow from topic creation to real chat
+              </p>
+            </div>
+
             {[
               {
-                icon: "💬",
-                title: "Чаты на интересующие вас темы",
-                description: "Общайтесь на волнующие темы, а не безжизненные абстракции"
+                step: "1",
+                title: "Create a topic",
+                description: "Share something you're passionate about",
+                example: "Best street food in your city"
               },
               {
-                icon: "🌍",
-                title: "Многоязычность",
-                description: "Поддержка более многих языков для комфортного общения"
+                step: "2", 
+                title: "Native speakers join",
+                description: "People who speak your target language respond",
+                example: "Spanish speakers share their local favorites"
               },
               {
-                icon: "📱",
-                title: "PWA функциональность",
-                description: "Установите приложение на телефон и используйте как нативное"
-              },
-            //   {
-            //     icon: "🔒",
-            //     title: "Безопасность",
-            //     description: "Ваши данные защищены, а общение остается приватным"
-            //   }
-            ].map((feature, index) => (
+                step: "3",
+                title: "Real conversation starts",
+                description: "Chat naturally about shared interests",
+                example: "Exchange recipes and cultural stories"
+              }
+            ].map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.2 }}
                 viewport={{ once: true }}
                 className="flex items-start gap-4 group"
               >
-                                 <motion.div
-                   whileHover={{ scale: 1.1, rotate: 5 }}
-                   className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center text-2xl shadow-lg"
-                 >
-                   {feature.icon}
-                 </motion.div>
-                <div>
-                                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                     {feature.title}
-                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {feature.description}
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center text-black font-bold text-sm shadow-lg"
+                >
+                  {item.step}
+                </motion.div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-semibold text-white mb-1 group-hover:text-yellow-400 transition-colors">
+                    {item.title}
+                  </h4>
+                  <p className="text-gray-300 text-sm mb-2">
+                    {item.description}
                   </p>
+                  <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                    <p className="text-yellow-400 text-sm font-medium">
+                      Example: {item.example}
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}
-
-            {/* CTA Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-r from-yellow-500/20 to-yellow-400/20 rounded-2xl p-6 border border-white/10 backdrop-blur-sm"
-            >
-              <h4 className="text-lg font-semibold text-white mb-3">
-                Попробуйте прямо сейчас
-              </h4>
-              <p className="text-gray-300 text-sm mb-4">
-                Присоединяйтесь к раннему доступу и помогите нам создать лучшее приложение
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                                 <button className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-6 py-3 rounded-xl font-medium hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300">
-                   Начать общение
-                 </button>
-                 <button className="border border-yellow-500 text-yellow-400 px-6 py-3 rounded-xl font-medium hover:bg-yellow-500/10 transition-all duration-300">
-                   Узнать больше
-                 </button>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
 
@@ -185,10 +173,10 @@ export const Demo = () => {
           className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
         >
           {[
-            { number: "Ранний", label: "доступ" },
-            { number: "50+", label: "Поддерживаемых языков" },
-            { number: "Бета", label: "тестирование" },
-            { number: "Скоро", label: "в App Store" }
+            { number: "50+", label: "Languages" },
+            { number: "Real", label: "Conversations" },
+            { number: "Free", label: "To Use" },
+            { number: "PWA", label: "No App Store" }
           ].map((stat, index) => (
             <motion.div
               key={index}
@@ -198,9 +186,9 @@ export const Demo = () => {
               viewport={{ once: true }}
               className="group"
             >
-                             <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                 {stat.number}
-               </div>
+              <div className="text-3xl md:text-4xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                {stat.number}
+              </div>
               <div className="text-sm text-gray-400">
                 {stat.label}
               </div>

@@ -9,30 +9,74 @@ interface PhoneMockupProps {
 
 export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [typingText, setTypingText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   const slides = [
     {
-      title: "Карточки тем",
+      title: "Create Topic",
       content: [
-        { text: "Существует ли любовь?", lang: "🇷🇺 Русский", users: 12 },
-        { text: "What's your favorite movie?", lang: "🇺🇸 English", users: 8 },
-        { text: "¿Cuál es tu comida favorita?", lang: "🇪🇸 Español", users: 5 }
+        { 
+          type: "input",
+          placeholder: "What's your favorite street food?",
+          language: "🇺🇸 English",
+          action: "typing..."
+        },
+        { 
+          type: "preview",
+          title: "Best street food in your city",
+          description: "Share your local favorites and discover new flavors from around the world",
+          language: "🇺🇸 English"
+        }
       ]
     },
     {
-      title: "Чат",
+      title: "Native Speakers Join",
       content: [
-        { user: "Анна", message: "Привет! Как дела?", time: "14:30" },
-        { user: "You", message: "Привет! Хорошо, спасибо! А у тебя?", time: "14:31" },
-        { user: "Анна", message: "Отлично! Готова обсудить тему 😊", time: "14:32" }
+        { 
+          type: "notification",
+          user: "Maria (🇪🇸)",
+          message: "¡Hola! I love tacos al pastor from Mexico City!",
+          time: "2 min ago"
+        },
+        { 
+          type: "notification",
+          user: "Ahmed (🇪🇬)",
+          message: "Falafel in Cairo is amazing! Have you tried it?",
+          time: "1 min ago"
+        },
+        { 
+          type: "notification",
+          user: "Yuki (🇯🇵)",
+          message: "Takoyaki in Osaka is my favorite street food!",
+          time: "now"
+        }
       ]
     },
     {
-      title: "Профиль",
+      title: "Real Conversation",
       content: [
-        { label: "Языки", value: "🇷🇺 🇺🇸 🇪🇸" },
-        { label: "Темы создано", value: "15" },
-        { label: "Чатов", value: "47" }
+        { 
+          type: "message",
+          user: "Maria",
+          message: "I make tacos at home! Want the recipe?",
+          time: "14:30",
+          isOwn: false
+        },
+        { 
+          type: "message",
+          user: "You",
+          message: "Yes please! I love trying new recipes",
+          time: "14:31",
+          isOwn: true
+        },
+        { 
+          type: "message",
+          user: "Ahmed",
+          message: "I can share my falafel recipe too!",
+          time: "14:32",
+          isOwn: false
+        }
       ]
     }
   ];
@@ -40,10 +84,34 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 3000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [slides.length]);
+
+  // Typing effect for first slide
+  useEffect(() => {
+    if (currentSlide === 0) {
+      setIsTyping(true);
+      const text = "What's your favorite street food?";
+      let currentIndex = 0;
+      
+      const typingInterval = setInterval(() => {
+        if (currentIndex < text.length) {
+          setTypingText(text.slice(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setTimeout(() => setIsTyping(false), 1000);
+        }
+      }, 100);
+
+      return () => clearInterval(typingInterval);
+    } else {
+      setTypingText('');
+      setIsTyping(false);
+    }
+  }, [currentSlide]);
 
   return (
     <motion.div
@@ -93,30 +161,65 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
                     transition={{ delay: index * 0.1 }}
                     className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/5"
                   >
-                    {currentSlide === 0 && (
+                    {/* Topic Creation */}
+                    {item.type === "input" && (
                       <div>
-                        <p className="text-white font-medium text-sm">{item.text}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs text-gray-300">{item.lang}</span>
-                                                     <span className="text-xs text-yellow-400">{item.users} участников</span>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xs text-gray-300">{item.language}</span>
+                          <span className="text-xs text-yellow-400 animate-pulse">
+                            {isTyping ? "typing..." : "ready"}
+                          </span>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-2 border border-white/10">
+                          <p className="text-white text-sm">
+                            {typingText}
+                            {isTyping && <span className="animate-pulse">|</span>}
+                          </p>
                         </div>
                       </div>
                     )}
-                    
-                    {currentSlide === 1 && (
+
+                    {item.type === "preview" && (
                       <div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-white font-medium text-sm">{item.user}</span>
-                          <span className="text-xs text-gray-400">{item.time}</span>
+                        <h4 className="text-white font-medium text-sm mb-1">{item.title}</h4>
+                        <p className="text-gray-300 text-xs mb-2">{item.description}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-300">{item.language}</span>
+                          <span className="text-xs text-yellow-400">Ready to share</span>
                         </div>
-                        <p className="text-gray-300 text-sm">{item.message}</p>
                       </div>
                     )}
-                    
-                    {currentSlide === 2 && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-300 text-sm">{item.label}</span>
-                        <span className="text-white font-medium text-sm">{item.value}</span>
+
+                    {/* Notifications */}
+                    {item.type === "notification" && (
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-xs font-bold text-black">
+                          {item.user.split(' ')[0][0]}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-white font-medium text-sm">{item.user}</span>
+                            <span className="text-xs text-gray-400">{item.time}</span>
+                          </div>
+                          <p className="text-gray-300 text-sm">{item.message}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Chat Messages */}
+                    {item.type === "message" && (
+                      <div className={`flex ${item.isOwn ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-lg p-2 ${
+                          item.isOwn 
+                            ? 'bg-yellow-500 text-black' 
+                            : 'bg-white/20 text-white'
+                        }`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-medium opacity-70">{item.user}</span>
+                            <span className="text-xs opacity-70">{item.time}</span>
+                          </div>
+                          <p className="text-sm">{item.message}</p>
+                        </div>
                       </div>
                     )}
                   </motion.div>
@@ -126,14 +229,14 @@ export const PhoneMockup = ({ className = '' }: PhoneMockupProps) => {
               {/* Bottom Navigation */}
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="bg-black/20 backdrop-blur-sm rounded-xl p-2 flex items-center justify-around">
-                  {['🏠', '💬', '👤'].map((icon, index) => (
+                  {['💡', '🔔', '💬'].map((icon, index) => (
                     <motion.button
                       key={index}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                                             className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-colors ${
-                         index === currentSlide ? 'bg-yellow-500' : 'bg-transparent'
-                       }`}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-colors ${
+                        index === currentSlide ? 'bg-yellow-500' : 'bg-transparent'
+                      }`}
                       onClick={() => setCurrentSlide(index)}
                     >
                       {icon}

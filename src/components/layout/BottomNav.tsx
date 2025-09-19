@@ -8,7 +8,7 @@ export default function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Не показываем нижнее меню на странице авторизации
+  // Do not show bottom menu on auth page
   if (NO_BOTTOM_NAV_ROUTES.includes(pathname as typeof NO_BOTTOM_NAV_ROUTES[number])) {
     return null;
   }
@@ -22,21 +22,21 @@ export default function BottomNav() {
         className="flex flex-col items-center text-gray-700 hover:text-black"
       >
         <Home size={42} />
-        <span className="text-xs">Фид</span>
+        <span className="text-xs">Feed</span>
       </button>
       <button
         onClick={() => router.push('/cards/create')}
         className="flex flex-col items-center text-gray-700 hover:text-black"
       >
         <PlusCircle size={42} />
-        <span className="text-xs">Добавить</span>
+        <span className="text-xs">Add</span>
       </button>
       <button
         onClick={() => router.push('/profile')}
         className="flex flex-col items-center text-gray-700 hover:text-black"
       >
         <User size={42} />
-        <span className="text-xs">Профиль</span>
+        <span className="text-xs">Profile</span>
       </button>
     </nav>
   );
